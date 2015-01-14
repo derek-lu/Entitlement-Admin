@@ -1,0 +1,432 @@
+body, html {
+	background-color: #ffffff;
+	overflow:hidden;
+	font-family: helvetica;
+	font-size: 13px;
+	color: #000000;
+}
+
+#main-container {
+	margin: 20px;
+}
+
+.busy-cursor {
+	cursor: progress;
+}
+
+input {
+	font-family: AdobeCleanLight, helvetica;
+}
+
+#login-container input {
+	font-size: 15px;
+}
+
+#logged-in-container-outer input {
+	font-size: 13px;
+}
+
+#login-container input[type=submit] {
+    font-size: 15px;
+	height: 36px;
+}
+
+button {
+    font-size: 13px;
+}
+
+button:active {
+	opacity: .9;
+}
+
+button:disabled {
+	opacity: .5;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+button:focus {
+	outline:0;
+}
+
+input[type=submit], button {
+	padding: 9px 10px 5px 10px;
+	background:#2098f6;
+	border:0 none;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    color: #ffffff;
+    font-family: AdobeCleanRegular, helvetica;
+    font-weight: bold;
+	box-sizing: border-box;
+}
+
+#login-container {
+	width: 1200px;
+	height: 1200px;
+	background-color: #ffffff;
+	background: url("../images/login_bg.jpg") no-repeat;
+	margin: 0 auto;
+	position: relative;
+}
+
+#login-form-container {
+	position: absolute;
+	top: 401px;
+	left: 386px;
+}
+
+#login-form {
+	background-color: rgba(0,0,0,.75);
+	width: 425px;
+	padding: 40px;
+	box-sizing: border-box;
+	color: #ffffff;
+}
+
+#login-header-container {
+	font-family: AdobeCleanLight, helvetica;
+	font-size: 22px;
+	font-weight: bold;
+	margin-bottom: 20px;
+	white-space: nowrap;
+}
+
+#login-header-container img {
+	display: inline-block;
+}
+
+#login-header-label {
+	display: inline-block;
+	position: relative;
+	font-weight: normal;
+}
+
+#login-header-description {
+	font-size: 13px;
+	margin-left: 40px;
+}
+
+input[type=input], input[type=text], input[type=password] {
+	font-size: 15px;
+	box-sizing: border-box;
+	line-height: 20px;
+	padding: 5px 6px 3px 6px;
+	border: solid 1px #ccc;
+	width: 345px;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+   	border-radius: 0px;
+   	height: 35px;
+   	width: 100%;
+}
+
+#login-button {
+	width: 345px;
+}
+
+.login-submit-error {
+	color: red;
+	margin: 15px 0px 0px 0px;
+	font-family: AdobeCleanRegular, helvetica;
+	height: 20px;
+	font-size: 14px;
+}
+
+#login-description {
+	margin-top: 10px;
+	width: 425px;
+	color: #ffffff;
+	-moz-text-shadow: 1px 1px #000;
+	-webkit-text-shadow: 1px 1px #000;
+	text-shadow: 1px 1px #000;
+	font-size: 15px;
+}
+
+.input-label {
+	display: inline-block;
+	width: 100px;
+	text-align: right;
+	font-weight: bold;
+}
+
+.app-id-submit-error {
+	color: red;
+	display: inline-block;
+	margin-left: 10px;
+}
+
+#adobeId-input, #password-input {
+	display: inline-block;
+}
+
+#logout-link {
+	position: absolute;
+	top: 10px;
+	right:15px;
+	color: #fff;
+	text-decoration: underline;
+}
+
+#logout-link:hover {
+	text-decoration: none;
+}
+
+#adobeId-input {
+	margin: 0px 3px 20px 0px;
+}
+
+#password-input {
+	margin-bottom: 30px;
+}
+
+#logged-in-container-outer {
+	color: #333333;
+	font-family: AdobeCleanRegular, helvetica;
+	background-color: #f0f0f0;
+	height: 100%;
+}
+
+#logged-in-container-inner {
+	width: 1200px;
+	background-color: #ffffff;
+	margin: 0 auto;
+	position: relative;
+	-webkit-box-shadow: 0px 0px 6px 3px rgba(0,0,0,0.1);
+	-moz-box-shadow: 0px 0px 6px 3px rgba(0,0,0,0.1);
+	box-shadow: 0px 0px 6px 3px rgba(0,0,0,0.1);
+	padding-bottom: 20px;
+}
+
+#logged-in-content-container {
+	padding: 20px;
+}
+
+#header-description {
+	position: absolute;
+	font-size: 14px;
+	left: 185px;
+	top: 100px;
+	color: #fff;
+	opacity: .7;
+}
+
+#service-url-input, #integrator-id-input {
+	border-color: #efefef;
+}
+
+.nav-tabs {
+	margin: 0px 0px 0px 0px;
+	position: relative;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.tab-content {
+	margin-top: 20px;
+}
+
+.row {
+	white-space: nowrap;
+	margin: 0px;
+	clear: both;
+}
+
+#logged-in-content-container .row, #login-container .row {
+	margin-bottom: 20px;
+}
+
+#app-id-input, #service-url-input, #integrator-id-input {
+	width: 400px;
+	display: inline-block;
+	color: #000000;
+}
+
+.row-button {
+	margin-left: 10px;
+}
+
+.modal-background {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0);
+	left: 0px;
+	top: 0px;
+}
+
+.dialog {
+	border-radius: 6px;
+	-moz-box-shadow: 0px 3px 15px 0px rgba(0,0,0,.25);
+	-webkit-box-shadow: 0px 3px 15px 0px rgba(0,0,0,.25);
+	box-shadow: 0px 3px 15px 0px rgba(0,0,0,.25);
+	border: 1px solid #aaaaaa;
+	margin: auto;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+	background-color: #f7f7f7;
+	padding: 15px;
+	height: 80px;
+	font-size: 12px;
+	width: 300px;
+}
+
+.divider {
+	border-top: 1px solid #bbbbbb;
+	height: 1px;
+}
+
+.hide {
+	display: none;
+}
+
+.info-icon {
+	font-family: courier;
+	font-weight: bold;
+	font-size: 11px;
+	width: 15px;
+	height: 15px;
+	border-radius: 8px;
+	background-color: #66AFE9;
+	color: #ffffff;
+	cursor: default;
+	display: inline-block;
+	position: relative;
+	top: -1px;
+}
+
+.info-icon div {
+	position: relative;
+	top: 0px;
+	left: 4px;
+}
+
+#left-tab-border, #right-tab-border {
+	position: absolute;
+	border-top: 1px solid #DDDDDD;
+	height: 0px;
+	width: 20px;
+	top: 42px;
+}
+
+#left-tab-border {
+	left: -20px;
+}
+
+#right-tab-border {
+	right: -20px;
+}
+
+.modal-dialog {
+	width: 600px;
+}
+
+.required-dialog-form-input {
+	margin-bottom: 20px;
+	display: inline-block;
+}
+
+.required-icon {
+	display: inline-block;
+}
+
+.modal-body {
+	padding-bottom: 0px;
+}
+
+.modal-title {
+	font-size: 18px;
+}
+
+.dialog-error {
+	color: red;
+	margin: 5px 0px;
+	height: 18px;
+	text-align: right;
+	clear: both;
+}
+
+.modal-footer {
+	margin-top: 0px;
+}
+
+#edit-group-name-input, .dialog-add-select, .update-password {
+	margin-bottom: 20px;
+}
+
+#edit-group-description-input {
+	margin-bottom: 5px;
+}
+
+.dialog-add-select {
+	width: 511px;
+}
+
+.dialog-add-select, .dialog-add-button {
+	display: inline-block;
+}
+
+.dialog-select-label {
+	font-size: 17px;
+	position: relative;
+	top: 12px;
+}
+
+select {
+	height: 36px;
+	padding: 3px;
+	background: url("../images/select_icon.png") no-repeat;
+	background-position: 495px 15px;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	border: solid 1px #ccc;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+   	border-radius: 0px;
+	background-color: #f8f8f8;
+	font-family: AdobeCleanLight, helvetica;
+	font-size: 15px;
+}
+
+.dialog-add-button {
+	position: relative;
+	top: 17px;
+	margin-left: 7px;
+	width: 36px;
+	height: 36px;
+}
+
+.dialog-add-button .plus-icon {
+	font-weight: bold;
+	position: relative;
+	top: -10px;
+	left: -1px;
+	font-family: arial;
+	font-size: 28px;
+}
+
+.dialog-multi-select {
+	height: 150px;
+	margin-bottom: 10px;
+	width: 100%;
+	background: none;
+	line-height: 25px;
+}
+
+.dialog-remove-button {
+	float: right;
+	margin-bottom: 5px;
+	clear: right;
+}
+
+.ok-button {
+	margin-left: 10px;
+}
+
+.form-control {
+	color: #000;
+}
+

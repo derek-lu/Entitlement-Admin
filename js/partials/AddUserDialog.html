@@ -1,0 +1,55 @@
+<div class="modal-header">
+    <h4 class="modal-title">Add User</h4>
+</div>
+<div class="modal-body">
+	<form
+		ng-submit="ok_clickHandler()"
+		ui-keypress="{13:'ok_clickHandler()'}">
+		<div class="row">
+			<input
+				type="input"
+				class="required-dialog-form-input"
+				ng-model="form.name"
+				placeholder="User Name"
+				required
+				ng-minlength="1">
+				<div class="required-icon">*</div>
+		</div>
+		<div class="row">
+			<input
+				type="password"
+				class="required-dialog-form-input"
+				ng-model="form.password1"
+				placeholder="Password"
+				required
+				ng-minlength="1">
+				<div class="required-icon">*</div>
+		</div>
+		<div class="row">
+			<input
+				type="password"
+				class="required-dialog-form-input"
+				ng-model="form.password2"
+				placeholder="Retype Password"
+				required
+				ng-minlength="1">
+				<div class="required-icon">*</div>
+		</div>
+		<input
+			type="input"
+			ng-model="form.description"
+			placeholder="Description">
+		<div class="dialog-error"
+			ng-bind="form.errorMessage">
+		</div>
+	</form>
+</div>
+
+<div class="modal-footer">
+	<button
+		ng-click="cancel_clickHandler()">Cancel</button>
+	<button
+		class="ok-button"
+		ng-click="ok_clickHandler()"
+		ng-class="{'busy-cursor': form.isAddingUser==true}">OK</button>
+</div>

@@ -1,0 +1,67 @@
+<div class="modal-header"
+	ng-init="init()"
+	ng-class="{'busy-cursor': form.isGettingGroupsForFolio==true}">
+    <h4 class="modal-title">{{folio.label}}</h4>
+</div>
+<div class="modal-body" ng-class="{'busy-cursor': form.isGettingFoliosForGroup==true}">
+	<form id="edit-group-form">
+		<div class="row">
+			<div class="dialog-select-label">Entitle Folios to Group</div>
+			<select
+				ng-model="form.groupToAdd"
+				class="dialog-add-select"
+				ng-options="group.name for group in form.availableGroups track by group.id">
+				<option value="" selected>Select a Group</option>
+			</select>
+			<button
+				class="dialog-add-button"
+				ng-click="addGroup_clickHandler()"
+				ng-disabled="!form.groupToAdd"><div class="plus-icon">+</div></button>
+		</div>
+		<select
+			id="folio-groups-multi-select"
+			class="folio-groups-multi-select dialog-multi-select"
+			size="5">
+		</select>
+		<button
+			class="dialog-remove-button"
+			ng-click="removeFolio_clickHandler()"
+			ng-disabled="!form.groupToDelete">Remove</button>
+
+		<div class="row">
+			<div class="dialog-select-label">Entitle Folios to Users</div>
+			<select
+				ng-model="form.userToAdd"
+				class="dialog-add-select"
+				ng-options="user.name for user in form.availableUsers track by user.id">
+				<option value="" selected>Select a User</option>
+			</select>
+			<button
+				class="dialog-add-button"
+				ng-click="addUser_clickHandler()"
+				ng-disabled="!form.userToAdd"><div class="plus-icon">+</div></button>
+		</div>
+		<select
+			id="folio-users-multi-select"
+			class="folio-users-multi-select dialog-multi-select"
+			size="5">
+		</select>
+		<button
+			class="dialog-remove-button"
+			ng-click="removeUser_clickHandler()"
+			ng-disabled="!form.userToDelete">Remove</button>
+
+		<div class="dialog-error"
+			ng-bind="form.errorMessage">
+		</div>
+	</form>
+</div>
+
+<div class="modal-footer" ng-class="{'busy-cursor': form.isGettingGroupsForFolio==true}">
+	<button
+		ng-click="cancel_clickHandler()">Cancel</button>
+	<button
+		class="ok-button"
+		ng-click="ok_clickHandler()"
+		ng-class="{'busy-cursor': form.isUploadingFolioEdit==true}">Save</button>
+</div>

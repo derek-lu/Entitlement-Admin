@@ -1,0 +1,86 @@
+<div class="modal-header"
+	ng-init="init()"
+	ng-class="{'busy-cursor': form.isGettingFoliosForGroup==true}">
+    <h4 class="modal-title">Edit Group</h4>
+</div>
+<div class="modal-body" ng-class="{'busy-cursor': form.isGettingFoliosForGroup==true}">
+	<form id="edit-group-form"
+		ui-keypress="{13:'ok_clickHandler()'}">
+		<div class="row">
+			<input
+				name="name"
+				type="input"
+				class="required-dialog-form-input"
+				ng-model="form.name"
+				placeholder="Group Name"
+				required
+				ng-minlength="1">
+				<div class="required-icon">*</div>
+		</div>
+		<input
+			id="edit-group-description-input"
+			name="description"
+			type="input"
+			ng-model="form.description"
+			placeholder="Description">
+
+		<div class="row">
+			<div class="dialog-select-label">Entitle Group to Folios</div>
+			<select
+				ng-model="form.folioToAdd"
+				class="dialog-add-select"
+				ng-options="folio.label for folio in form.availableFolios track by folio.productId">
+				<option value="" selected>Select a Folio</option>
+			</select>
+			<button
+				class="dialog-add-button"
+				ng-click="addFolio_clickHandler()"
+				ng-disabled="!form.folioToAdd"><div class="plus-icon">+</div></button>
+		</div>
+		<select
+			id="group-folios-multi-select"
+			class="group-folios-multi-select dialog-multi-select"
+			size="5">
+		</select>
+		<button
+			class="dialog-remove-button"
+			ng-click="removeFolio_clickHandler()"
+			ng-disabled="!form.folioToDelete">Remove</button>
+
+		<div class="row">
+			<div class="dialog-select-label">Add Users to Group</div>
+			<select
+				ng-model="form.userToAdd"
+				class="dialog-add-select"
+				ng-options="user.name for user in form.availableUsers track by user.id">
+				<option value="" selected>Select a User</option>
+			</select>
+			<button
+				class="dialog-add-button"
+				ng-click="addUser_clickHandler()"
+				ng-disabled="!form.userToAdd"><div class="plus-icon">+</div></button>
+		</div>
+		<select
+			id="group-users-multi-select"
+			class="group-users-multi-select dialog-multi-select"
+			size="5">
+		</select>
+		<button
+			class="dialog-remove-button"
+			ng-click="removeUser_clickHandler()"
+			ng-disabled="!form.userToDelete">Remove</button>
+
+		<div class="dialog-error"
+			ng-bind="form.errorMessage">
+		</div>
+	</form>
+</div>
+
+<div class="modal-footer" ng-class="{'busy-cursor': form.isGettingFoliosForGroup==true}">
+	<button
+		ng-click="cancel_clickHandler()">Cancel</button>
+	<button
+		class="ok-button"
+		ng-click="ok_clickHandler()"
+		ng-class="{'busy-cursor': form.isUploadingGroupEdit==true}">Save</button>
+</div>
