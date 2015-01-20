@@ -4,8 +4,8 @@ require_once "utils.php";
 
 $mysqli = new mysqli($db_host, $db_user, $db_password, "entitlement_admin");
 
-$guid = escapeURLData($_POST["guid"]);
-$appId = escapeURLData($_POST["appId"]);
+$guid = isset($_POST["guid"]) ? escapeURLData($_POST["guid"]) : null;
+$appId = isset($_POST["appId"]) ? escapeURLData($_POST["appId"]) : null;
 
 if ($mysqli->connect_errno) {
     echo '{"success":false,"description":"Sorry, unable to connect to the database."}';
