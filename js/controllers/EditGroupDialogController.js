@@ -155,8 +155,12 @@ var EditGroupDialogController = function ($scope, $modalInstance, entitlementSer
 				_.each(data.folios, function(element) { // Loop through the folios.
 					var productId = element;
 					var folio = _.find(folios, {productId: productId});
-					groupFolios.push(folio); // Get the folio object for the productId.
-					optionTags += "<option value='" + productId + "'>" + folio.label + "</option>"
+					// Make sure there is an associated folio for this productId.
+					// If the folio was deleted or made private then there won't be one.
+					if (folio) {
+						groupFolios.push(folio); // Get the folio object for the productId.
+						optionTags += "<option value='" + productId + "'>" + folio.label + "</option>"
+					}
 				})
 				$scope.form.groupFolios = groupFolios;
 
