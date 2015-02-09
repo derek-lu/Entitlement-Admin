@@ -1,5 +1,5 @@
 // Main controller for the app.
-app.controller("EntitlementController", ["$scope", "entitlementService", "$modal", function($scope, entitlementService, $modal) {
+app.controller("EntitlementController", ["$scope", "entitlementService", "$modal", "$rootScope", "$timeout", function($scope, entitlementService, $modal, $rootScope, $timeout) {
 	// Triggered when a user successfully logs in.
 	$scope.$on("loginSuccess", function(e) {
 		// Get the published folios for the guid.
