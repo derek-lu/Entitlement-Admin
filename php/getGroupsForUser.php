@@ -2,7 +2,7 @@
 require_once "settings.php";
 require_once "utils.php";
 
-$mysqli = new mysqli($db_host, $db_user, $db_password, "entitlement_admin");
+$mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 if ($mysqli->connect_errno) {
     echo '{"success":false,"description":"Sorry, unable to connect to the database."}';
 } else {

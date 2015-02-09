@@ -4,7 +4,7 @@ require_once "utils.php";
 
 ini_set('display_errors', 1);
 
-$mysqli = new mysqli($db_host, $db_user, $db_password, "entitlement_admin");
+$mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 if ($mysqli->connect_errno) {
     echo '{"success":false,"description":"Sorry, unable to connect to the database."}';
