@@ -44,7 +44,7 @@
 		</select>
 		<button
 			class="dialog-remove-button"
-			ng-click="removeFolio_clickHandler()"
+			ng-click="removeFolio_clickHandler(true)"
 			ng-disabled="!form.folioToDelete">Remove</button>
 
 		<div class="row">
@@ -69,7 +69,6 @@
 			class="dialog-remove-button"
 			ng-click="removeUser_clickHandler()"
 			ng-disabled="!form.userToDelete">Remove</button>
-
 		<div class="dialog-error"
 			ng-bind="form.errorMessage">
 		</div>
