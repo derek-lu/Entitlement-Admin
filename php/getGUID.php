@@ -38,7 +38,7 @@ else
 			} else {
 				// Check to see if there is a csrf token for this guid.
 				// If there is then reuse it. It is an md5 hash of adobeId and guid.
-				$mysqli = new mysqli($db_host, $db_user, $db_password, "entitlement_admin");
+				$mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 				$stmt = $mysqli->prepare("SELECT token FROM csrf_tokens WHERE guid = ?");
 				$stmt->bind_param("s", $guid);
