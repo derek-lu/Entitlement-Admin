@@ -15,8 +15,8 @@ app.service("loginService", ["$http", "$rootScope", function($http, $rootScope) 
 				}
 			);
 		}
-	}
-}])
+	};
+}]);
 
 app.service("entitlementService", ["$http", "$rootScope", function($http, $rootScope) {
 	return {
@@ -47,7 +47,7 @@ app.service("entitlementService", ["$http", "$rootScope", function($http, $rootS
 								// Get the attributes
 								var folio = {};
 								folio.productId = productId;
-								
+
 								// Loop through the nodes.
 								var childNodes = issueNode.childNodes;
 								var numNodes = childNodes.length;
@@ -68,7 +68,7 @@ app.service("entitlementService", ["$http", "$rootScope", function($http, $rootS
 
 								// Create a label field for each folio.
 								folio.label = folio.magazineTitle + " - " + folio.issueNumber;
-								
+
 								folios.push(folio);
 							}
 						}
@@ -79,7 +79,7 @@ app.service("entitlementService", ["$http", "$rootScope", function($http, $rootS
 								return -1;
 							if(a.label > b.label)
 								return 1;
-							
+
 							return 0;
 						});
 
@@ -260,7 +260,7 @@ app.service("entitlementService", ["$http", "$rootScope", function($http, $rootS
 				folios: folios,
 				users: users,
 				csrfToken: $rootScope.csrfToken
-			}
+			};
 
 			var xsrf = $.param({group: JSON.stringify(group)});
 			return $http({
@@ -284,7 +284,7 @@ app.service("entitlementService", ["$http", "$rootScope", function($http, $rootS
 				folios: folios,
 				groups: groups,
 				csrfToken: $rootScope.csrfToken
-			}
+			};
 
 			var xsrf = $.param({user: JSON.stringify(user)});
 			return $http({
@@ -331,7 +331,7 @@ app.service("entitlementService", ["$http", "$rootScope", function($http, $rootS
 				groupIds: groupIds,
 				userIds: userIds,
 				csrfToken: $rootScope.csrfToken
-			}
+			};
 
 			var xsrf = $.param({data: JSON.stringify(data)});
 			return $http({
@@ -344,7 +344,7 @@ app.service("entitlementService", ["$http", "$rootScope", function($http, $rootS
 				}
 			);
 		}
-	}
-}])
+	};
+}]);
 
 

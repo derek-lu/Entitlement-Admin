@@ -15,7 +15,7 @@ $csrfToken = escapeURLData($data->csrfToken);
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
-	echo '{"success":false,"description":"Sorry, invalid token."}'; 
+	echo '{"success":false,"description":"Sorry, invalid token."}';
 } else if (empty($productId) || empty($guid)) {
 	echo '{"success":false,"description":"Sorry, productId and guid are required fields."}';
 } else {
@@ -61,7 +61,7 @@ if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
 
 		// Add the new group ids.
 		if (count($groupIds) > 0) {
-			$insertFolios = array(); 
+			$insertFolios = array();
 			foreach ($groupIds as $row) {
 				$insertFolios[] = '("' . $productId . '", "' . escapeURLData($row) . '", "' . $guid . '")';
 			}
@@ -73,7 +73,7 @@ if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
 
 		// Add the new user ids.
 		if (count($userIds) > 0) {
-			$insertFolios = array(); 
+			$insertFolios = array();
 			foreach ($userIds as $row) {
 				$insertFolios[] = '("' . $productId . '", "' . escapeURLData($row) . '", "' . $guid . '")';
 			}

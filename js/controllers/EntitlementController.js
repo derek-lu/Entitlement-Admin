@@ -29,9 +29,9 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 			// Create a timeout to download the list of folios to detect new/removed folios every 30 secs.
 			$timeout(function() {
 				$scope.getFolios();
-			}, 30000)
+			}, 30000);
 		});
-	}
+	};
 
 	var href = location.href;
 	$scope.serviceURL = location.href + (href.lastIndexOf("/") == href.length - 1 ? "" : "/") + "services";
@@ -76,21 +76,21 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 
 	$scope.logoutButton_clickHandler = function() {
 		location.reload();
-	}
+	};
 
 	// User double-clicked a group from the grid.
 	$scope.groupSelectHandler = function(rowItem) {
 		$scope.selectedGroup = rowItem.entity;
 
 		// Figure out if a user double-clicked the row.
-		if (Date.now() - $scope.firstGroupClickTime < 500 // Check to see if the second click was within 500ms
-			&& $scope.selectedGroup == $scope.previousSelectedGroup) { // Make sure the user clicked the same row.
+		if (Date.now() - $scope.firstGroupClickTime < 500 && // Check to see if the second click was within 500ms
+			$scope.selectedGroup == $scope.previousSelectedGroup) { // Make sure the user clicked the same row.
 			$scope.displayEditGroupDialog();
 		}
 
 		$scope.firstGroupClickTime = Date.now();
 		$scope.previousSelectedGroup = rowItem.entity;
-	}
+	};
 
 	$scope.displayEditGroupDialog = function() {
 		var modalInstance = $modal.open({
@@ -98,26 +98,26 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 			controller: EditGroupDialogController,
 			size: "sm",
 			resolve: {
-				entitlementService: function() { return entitlementService },
-				group: function() { return $scope.selectedGroup },
-				folios: function() { return $scope.folios },
-				users: function() { return $scope.users }
+				entitlementService: function() { return entitlementService; },
+				group: function() { return $scope.selectedGroup; },
+				folios: function() { return $scope.folios; },
+				users: function() { return $scope.users; }
 			}
 		});
-	}
+	};
 
 	$scope.userSelectHandler = function(rowItem) {
 		$scope.selectedUser = rowItem.entity;
 
 		// Figure out if a user double-clicked the row.
-		if (Date.now() - $scope.firstUserClickTime < 500 // Check to see if the second click was within 500ms
-			&& $scope.selectedUser == $scope.previousSelectedUser) { // Make sure the user clicked the same row.
+		if (Date.now() - $scope.firstUserClickTime < 500 && // Check to see if the second click was within 500ms
+			$scope.selectedUser == $scope.previousSelectedUser) { // Make sure the user clicked the same row.
 			$scope.displayEditUserDialog();
 		}
 
 		$scope.firstUserClickTime = Date.now();
 		$scope.previousSelectedUser = rowItem.entity;
-	}
+	};
 
 	$scope.displayEditUserDialog = function() {
 		var modalInstance = $modal.open({
@@ -125,28 +125,28 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 			controller: EditUserDialogController,
 			size: "sm",
 			resolve: {
-				entitlementService: function() { return entitlementService },
-				user: function() { return $scope.selectedUser },
-				folios: function() { return $scope.folios },
-				groups: function() { return $scope.groups },
-				guid: function() { return $scope.guid }
+				entitlementService: function() { return entitlementService; },
+				user: function() { return $scope.selectedUser; },
+				folios: function() { return $scope.folios; },
+				groups: function() { return $scope.groups; },
+				guid: function() { return $scope.guid; }
 			}
 		});
-	}
+	};
 
 	// User double-clicked a folio from the grid.
 	$scope.folioSelectHandler = function(rowItem) {
 		$scope.selectedFolio = rowItem.entity;
 
 		// Figure out if a user double-clicked the row.
-		if (Date.now() - $scope.firstFolioClickTime < 500 // Check to see if the second click was within 500ms
-			&& $scope.selectedFolio == $scope.previousSelectedFolio) { // Make sure the user clicked the same row.
+		if (Date.now() - $scope.firstFolioClickTime < 500 && // Check to see if the second click was within 500ms
+			$scope.selectedFolio == $scope.previousSelectedFolio) { // Make sure the user clicked the same row.
 			$scope.displayEditFolioDialog();
 		}
 
 		$scope.firstFolioClickTime = Date.now();
 		$scope.previousSelectedFolio = rowItem.entity;
-	}
+	};
 
 	$scope.displayEditFolioDialog = function() {
 		var modalInstance = $modal.open({
@@ -154,21 +154,21 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 		controller: EditFolioDialogController,
 		size: "sm",
 		resolve: {
-				entitlementService: function() { return entitlementService },
-				folio: function() { return $scope.selectedFolio },
-				groups: function() { return $scope.groups },
-				users: function() { return $scope.users },
-				guid: function() { return $scope.guid }
+				entitlementService: function() { return entitlementService; },
+				folio: function() { return $scope.selectedFolio; },
+				groups: function() { return $scope.groups; },
+				users: function() { return $scope.users; },
+				guid: function() { return $scope.guid; }
 			}
 		});
-	}
+	};
 
 	$scope.appIdInput_changeHandler = function() {
 		$scope.appIdErrorMessage = "";
 		// Submit the change after 2 seconds of inactivity in the text field.
 		clearTimeout($scope.changeTimeout);
 		$scope.changeTimeout = setTimeout($scope.setAppId, 2000);
-	}
+	};
 
 	$scope.setAppId = function() {
 		entitlementService.setAppId($scope.guid, $scope.appId).then(
@@ -177,7 +177,7 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 					$scope.appIdErrorMessage = data.description;
 			}
 		);
-	}
+	};
 
 	$scope.displayAddGroupDialog = function() {
 		var modalInstance = $modal.open({
@@ -185,8 +185,8 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 			controller: AddGroupDialogController,
 			size: "sm",
 			resolve: {
-				entitlementService: function() { return entitlementService },
-				guid: function() { return $scope.guid }
+				entitlementService: function() { return entitlementService; },
+				guid: function() { return $scope.guid; }
 			}
 		});
 
@@ -195,7 +195,7 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 				$scope.groups.push({guid: $scope.guid, id: data.id, name: data.name, description: data.description});
 			}
 		);
-	}
+	};
 
 	$scope.displayAddUserDialog = function() {
 		var modalInstance = $modal.open({
@@ -203,9 +203,9 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 			controller: AddUserDialogController,
 			size: "sm",
 			resolve: {
-				entitlementService: function() { return entitlementService },
-				groups: function() { return $scope.groups },
-				guid: function() { return $scope.guid }
+				entitlementService: function() { return entitlementService; },
+				groups: function() { return $scope.groups; },
+				guid: function() { return $scope.guid; }
 			}
 		});
 
@@ -214,7 +214,7 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 				$scope.users.push({guid: $scope.guid, id: data.id, name: data.name, description: data.description});
 			}
 		);
-	}
+	};
 
 	$scope.deleteGroup = function() {
 		if ($scope.selectedGroup && !$scope.isDeletingGroup) {
@@ -236,7 +236,7 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 				}
 			);
 		}
-	}
+	};
 
 	$scope.deleteUser = function() {
 		if ($scope.selectedUser && !$scope.isDeletingUser) {
@@ -258,10 +258,10 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 				}
 			);
 		}
-	}
+	};
 
 	$scope.tabSelectHandler = function() {
 		$scope.$broadcast("tabSelected");
-	}
+	};
 
 }]);

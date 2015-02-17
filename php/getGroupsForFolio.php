@@ -8,7 +8,7 @@ if ($mysqli->connect_errno) {
 } else {
 	$guid = escapeURLData($_POST["guid"]);
 	$productId = escapeURLData($_POST["productId"]);
-	
+
 	if ($stmt = $mysqli->prepare("SELECT group_id FROM folios_for_groups WHERE guid = ? AND product_id = ?")) {
 		if ($stmt->bind_param("ss", $guid, $productId)) {
 			$stmt->execute();

@@ -10,7 +10,7 @@ $csrfToken = escapeURLData($_POST["csrfToken"]);
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
-	echo '{"success":false,"description":"Sorry, invalid token."}'; 
+	echo '{"success":false,"description":"Sorry, invalid token."}';
 } else {
 	$id = escapeURLData($_POST["id"]);
 
@@ -24,7 +24,7 @@ if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
 				if ($stmt->bind_param("ss", $guid, $id)) {
 					$stmt->execute();
 					$stmt->close();
-					
+
 					// Delete from folios_for_groups
 					$stmt = $mysqli->prepare("DELETE FROM folios_for_groups WHERE group_id = ? AND guid = ?");
 					$stmt->bind_param("ss", $id, $guid);
@@ -34,7 +34,7 @@ if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
 					$stmt = $mysqli->prepare("DELETE FROM groups_for_users WHERE group_id = ? AND guid = ?");
 					$stmt->bind_param("ss", $id, $guid);
 					$stmt->execute();
-					
+
 					echo '{"success":true}';
 				} else {
 					echo '{"success":false,"description":"deleteGroup - Binding groups parameters failed: (' . $mysqli->errno . ')' . $mysqli->error . '"}';

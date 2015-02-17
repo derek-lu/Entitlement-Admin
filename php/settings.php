@@ -1,4 +1,4 @@
-<?php 
+<?php
 // The mysql host name.
 $db_host = "localhost";
 

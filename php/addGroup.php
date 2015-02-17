@@ -12,7 +12,7 @@ if (empty($guid) || empty($name)) {
 	$mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 	if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
-		echo '{"success":false,"description":"Sorry, invalid token."}'; 
+		echo '{"success":false,"description":"Sorry, invalid token."}';
 	} else {
 		if ($mysqli->connect_errno) {
 		    echo '{"success":false,"description":"Sorry, unable to connect to the database."}';
@@ -21,7 +21,7 @@ if (empty($guid) || empty($name)) {
 				if ($stmt->bind_param("ss", $guid, $name)) {
 					$stmt->execute();
 					$stmt->store_result();
-					
+
 					if ($stmt->num_rows > 0) { // The group name is already being used.
 						echo '{"success":false,"description":"Group names must be unique. Please use a different name."}';
 					} else {

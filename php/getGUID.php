@@ -21,16 +21,17 @@ else
 	if ($ch = curl_init($url)) {
 		curl_setopt($ch, CURLOPT_COOKIEJAR, '/var/tmp/cookies.txt');
 		curl_setopt($ch, CURLOPT_COOKIEFILE, '/var/tmp/cookies.txt');
-		
+
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true );
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
 		$result = curl_exec($ch);
 		$status = curl_getinfo($ch);
-		
+
 		if ($status != FALSE) {
-			$responseXML = new SimpleXMLElement($result);			
+			$responseXML = new SimpleXMLElement($result);
 			$guid_array = $responseXML->xpath("//accountId");
 
 			if (empty($guid_array)) {
@@ -40,7 +41,7 @@ else
 
 				// Check to see if there is a csrf token for this guid.
 				// If there is then reuse it. It is an md5 hash of adobeId and guid.
-				$mysqli = new mysqli($db_host, $db_user, $db_password, "entitlement_admin");
+				$mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 				if ($stmt = $mysqli->prepare("SELECT token FROM csrf_tokens WHERE guid = ?")) {
 					$stmt->bind_param("s", $guid);
@@ -66,7 +67,7 @@ else
 			$info = "Failed to connect to dps app builder service";
 		}
 	}
-	
+
 	header('Access-Control-Allow-Origin: *');
 	echo "{\"success\": " . var_export($success, true) . ", \"guid\": \"$guid\", \"info\": \"$info\", \"csrfToken\":\"" . $token . "\"}";
 }
