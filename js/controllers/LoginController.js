@@ -15,7 +15,7 @@ app.controller("LoginController", function($scope, loginService) {
 					$scope.isValidating = false;
 					$scope.isUserLoggedIn = data.success;
 					if (!data.success) {
-						$scope.loginErrorMessage = "Sorry, the Adobe ID you entered is not a valid DPS account or the password is incorrect.";
+						$scope.loginErrorMessage = data.info;
 					} else {
 						$scope.guid = data.guid;
 						$scope.server = data.server;

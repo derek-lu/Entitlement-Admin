@@ -1,4 +1,4 @@
-<?php 
+<?php
 // The mysql host name.
 $db_host = "localhost";
 
@@ -6,7 +6,7 @@ $db_host = "localhost";
 $db_user = "root";
 
 // The mysql password.
-$db_password = "";
+$db_password = "root";
 
 // The mysql database name.
 $db_name = "entitlement_admin";

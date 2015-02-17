@@ -18,7 +18,7 @@ $csrfToken = escapeURLData($user->csrfToken);
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
-	echo '{"success":false,"description":"Sorry, invalid token."}'; 
+	echo '{"success":false,"description":"Sorry, invalid token."}';
 } else if (empty($guid) || empty($id) || empty($name)) {
 	echo '{"success":false,"description":"Sorry, required fields missing."}';
 } else {
@@ -30,7 +30,7 @@ if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
 			if ($stmt->bind_param("ssi", $guid, $name, $id)) {
 				$stmt->execute();
 				$stmt->store_result();
-				
+
 				if ($stmt->num_rows > 0) { // The user name is already being used.
 					echo '{"success":false,"description":"User names must be unique. Please use a different name."}';
 				} else {
@@ -56,7 +56,7 @@ if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
 					$stmt->execute();
 
 					if (count($folios) > 0) {
-						$insertFolios = array(); 
+						$insertFolios = array();
 						foreach ($folios as $row) {
 							$insertFolios[] = '("' . escapeURLData($row) . '", ' . $id . ', "' . $guid . '")';
 						}
@@ -71,7 +71,7 @@ if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
 					$stmt->execute();
 
 					if (count($groups) > 0) {
-						$insertGroups = array(); 
+						$insertGroups = array();
 						foreach ($groups as $row) {
 							$insertGroups[] = '("' . escapeURLData($row) . '", ' . $id . ', "' . $guid . '")';
 						}

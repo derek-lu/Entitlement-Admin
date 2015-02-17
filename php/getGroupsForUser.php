@@ -8,7 +8,7 @@ if ($mysqli->connect_errno) {
 } else {
 	$guid = escapeURLData($_POST["guid"]);
 	$id = escapeURLData($_POST["id"]);
-	
+
 	if ($stmt = $mysqli->prepare("SELECT group_id FROM groups_for_users WHERE guid = ? AND user_id = ?")) {
 		if ($stmt->bind_param("ss", $guid, $id)) {
 			$stmt->execute();

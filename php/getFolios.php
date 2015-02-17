@@ -6,5 +6,5 @@ $feed = "http://edge.adobe-dcfs.com/ddp/issueServer/issues?targetDimension=all&a
 header('Content-Type: text/xml');
 header('Access-Control-Allow-Origin: *');
 $xml = file_get_contents($feed);
-echo $xml;	
+echo $xml;
 ?>

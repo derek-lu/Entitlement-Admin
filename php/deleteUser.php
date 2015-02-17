@@ -10,7 +10,7 @@ $csrfToken = escapeURLData($_POST["csrfToken"]);
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
-	echo '{"success":false,"description":"Sorry, invalid token."}'; 
+	echo '{"success":false,"description":"Sorry, invalid token."}';
 } else {
 	$id = escapeURLData($_POST["id"]);
 
