@@ -1,11 +1,9 @@
 // Main controller for the app.
-app.controller("EntitlementController", ["$scope", "entitlementService", "$modal", function($scope, entitlementService, $modal) {
+app.controller("EntitlementController", ["$scope", "entitlementService", "$modal", "$rootScope", "$timeout", function($scope, entitlementService, $modal, $rootScope, $timeout) {
 	// Triggered when a user successfully logs in.
 	$scope.$on("loginSuccess", function(e) {
 		// Get the published folios for the guid.
-		entitlementService.getFolios($scope.guid).then(function(folios) {
-			$scope.folios = folios;
-		});
+		$scope.getFolios();
 
 		// Get the app id for this guid.
 		entitlementService.getAppId($scope.guid).then(function(data) {
@@ -22,6 +20,18 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 			$scope.groups = data.groups;
 		});
 	});
+
+	$scope.getFolios = function() {
+		entitlementService.getFolios($scope.guid).then(function(folios) {
+			$scope.folios = folios;
+			$rootScope.$emit("getFolios", folios);
+
+			// Create a timeout to download the list of folios to detect new/removed folios every 30 secs.
+			$timeout(function() {
+				$scope.getFolios();
+			}, 30000)
+		});
+	}
 
 	var href = location.href;
 	$scope.serviceURL = location.href + (href.lastIndexOf("/") == href.length - 1 ? "" : "/") + "services";

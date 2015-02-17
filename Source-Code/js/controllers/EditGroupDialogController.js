@@ -1,5 +1,5 @@
 // Controller for the Edit Group Dialog.
-var EditGroupDialogController = function ($scope, $modalInstance, entitlementService, group, folios, users) {
+var EditGroupDialogController = function ($scope, $modalInstance, $rootScope, $timeout, entitlementService, group, folios, users) {
 	// Data storage for the group name and description.
 	$scope.form = {};
 
@@ -27,6 +27,45 @@ var EditGroupDialogController = function ($scope, $modalInstance, entitlementSer
 				$scope.form.userToDelete = _.find($scope.form.groupUsers, {id: id});
 		});
 	}
+
+	// Handler for when a list of folios is downloaded. Server is polled.
+	var removeGetFoliosHandler = $rootScope.$on("getFolios", function(e, folios) {
+		// First figure out the available folio list.
+		var foliosForGroupHash = {};
+		var availableFolios = folios.slice(0);
+		var groupFolios = $scope.form.groupFolios;
+		// Store the folios associated with the group in a hash for look up.
+		_.each(groupFolios, function(element) {
+			foliosForGroupHash[element.productId] = element.productId;
+		});
+
+		var availableFoliosHash = {};
+		// Loop through the available folios and remove the folios already assigned to the group.
+		var len = availableFolios.length;
+		for (var i = len - 1; i >= 0; i--) {
+			var productId = availableFolios[i].productId;
+			if (foliosForGroupHash[productId])
+				availableFolios.splice(i, 1);
+
+			availableFoliosHash[productId] = productId;
+		}
+		$scope.form.availableFolios = availableFolios;
+
+		// Next, loop through the groups's folios and remove any that are no longer in the list of folios.
+		var len = groupFolios.length;
+		for (var i = len - 1; i >= 0; i--) {
+			var productId = groupFolios[i].productId;
+			if (!availableFoliosHash[productId]) { // folio no longer exists so set it as the one to delete
+				$scope.form.folioToDelete = groupFolios[i];
+				$scope.removeFolio_clickHandler(false);
+			}
+		}
+	});
+	
+	// Remove the handler when the scope is destroyed.
+	$scope.$on("$destroy", function() {
+		removeGetFoliosHandler();
+	});
 
 	$scope.addFolio_clickHandler = function() {
 		var folio = $scope.form.folioToAdd;
@@ -60,9 +99,11 @@ var EditGroupDialogController = function ($scope, $modalInstance, entitlementSer
 		$scope.form.userToAdd = $scope.form.availableUsers[0];
 	}
 	
-	$scope.removeFolio_clickHandler = function() {
+	$scope.removeFolio_clickHandler = function(isUserRemoved) {
 		if ($scope.form.folioToDelete) {
-			$scope.form.availableFolios.push($scope.form.folioToDelete);
+			// Add the folio back to the list of available folios.
+			if (isUserRemoved) // This will not be the case when a folio is removed due to an unpublish.
+				$scope.form.availableFolios.push($scope.form.folioToDelete);
 
 			var removeIndex = $scope.form.groupFolios.indexOf($scope.form.folioToDelete);
 			$scope.form.groupFolios.splice(removeIndex, 1);
@@ -71,12 +112,14 @@ var EditGroupDialogController = function ($scope, $modalInstance, entitlementSer
 			// ID won't work so need to use class.
 			$(".group-folios-multi-select option[value='" + $scope.form.folioToDelete.productId + "']").remove();
 
-			if ($scope.form.groupFolios.length > 0) {
-				var selectedIndex = Math.max(0, removeIndex - 1);
-				$scope.form.folioToDelete = $scope.form.groupFolios[selectedIndex];
-				$scope.$groupFoliosSelected.val($scope.form.folioToDelete.productId)
-			} else {
-				$scope.form.folioToDelete = null;
+			if (isUserRemoved) {
+				if ($scope.form.groupFolios.length > 0) {
+					var selectedIndex = Math.max(0, removeIndex - 1);
+					$scope.form.folioToDelete = $scope.form.groupFolios[selectedIndex];
+					$scope.$groupFoliosSelected.val($scope.form.folioToDelete.productId)
+				} else {
+					$scope.form.folioToDelete = null;
+				}
 			}
 		}
 	}
@@ -155,17 +198,19 @@ var EditGroupDialogController = function ($scope, $modalInstance, entitlementSer
 				_.each(data.folios, function(element) { // Loop through the folios.
 					var productId = element;
 					var folio = _.find(folios, {productId: productId});
-					groupFolios.push(folio); // Get the folio object for the productId.
-					optionTags += "<option value='" + productId + "'>" + folio.label + "</option>"
+					// Make sure there is an associated folio for this productId.
+					// If the folio was deleted or made private then there won't be one.
+					if (folio) {
+						groupFolios.push(folio); // Get the folio object for the productId.
+						optionTags += "<option value='" + productId + "'>" + folio.label + "</option>";
+
+						// Store the folios associated with the group in a hash for look up.
+						$scope.foliosForGroupHash[folio.productId] = folio.productId;
+					}
 				})
 				$scope.form.groupFolios = groupFolios;
 
 				$scope.$groupFoliosSelected.append(optionTags);
-
-				// Store the folios associated with the group in a hash for look up.
-				_.each(groupFolios, function(element) {
-					$scope.foliosForGroupHash[element.productId] = element.productId;
-				});
 
 				// Make a copy of folios since it will change based on what the group already has assigned.
 				var availableFolios = folios.slice(0);
@@ -179,8 +224,6 @@ var EditGroupDialogController = function ($scope, $modalInstance, entitlementSer
 				}
 
 				$scope.form.availableFolios = availableFolios;
-
-				//$scope.form.folioToAdd = availableFolios[0];
 			} else {
 				alert(data.description);
 			}

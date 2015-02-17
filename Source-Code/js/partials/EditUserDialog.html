@@ -1,9 +1,9 @@
 <div class="modal-header"
 	ng-init="init()"
-	ng-class="{'busy-cursor': form.isGettingFoliosForGroup==true}">
+	ng-class="{'busy-cursor': form.isGettingFoliosForUser==true}">
     <h4 class="modal-title">Edit User</h4>
 </div>
-<div class="modal-body" ng-class="{'busy-cursor': form.isGettingFoliosForGroup==true}">
+<div class="modal-body" ng-class="{'busy-cursor': form.isGettingFoliosForUser==true}">
 	<form id="edit-group-form"
 		ui-keypress="{13:'ok_clickHandler()'}">
 		<div class="row">
@@ -59,7 +59,7 @@
 		</select>
 		<button
 			class="dialog-remove-button"
-			ng-click="removeFolio_clickHandler()"
+			ng-click="removeFolio_clickHandler(true)"
 			ng-disabled="!form.folioToDelete">Remove</button>
 
 		<div class="row">

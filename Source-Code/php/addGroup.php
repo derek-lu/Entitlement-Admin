@@ -9,7 +9,7 @@ $csrfToken = escapeURLData($_POST["csrfToken"]);
 if (empty($guid) || empty($name)) {
 	echo '{"success":false,"description":"Sorry, guid and name are required fields."}';
 } else {
-	$mysqli = new mysqli($db_host, $db_user, $db_password, "entitlement_admin");
+	$mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 	if (!isValidCsrfToken($mysqli, $guid, $csrfToken)) {
 		echo '{"success":false,"description":"Sorry, invalid token."}'; 

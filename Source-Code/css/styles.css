@@ -215,6 +215,7 @@ input[type=input], input[type=text], input[type=password] {
 
 #service-url-input, #integrator-id-input {
 	border-color: #efefef;
+	background-color: #efefef;
 }
 
 .nav-tabs {
