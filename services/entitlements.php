@@ -8,7 +8,7 @@ require_once "../php/utils.php";
 
 // ini_set('display_errors', 1);
 
-$mysqli = new mysqli($db_host, $db_user, $db_password, "entitlement_admin");
+$mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 $authToken = escapeURLData($_REQUEST["authToken"]);
 
