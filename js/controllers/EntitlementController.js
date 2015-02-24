@@ -34,7 +34,7 @@ app.controller("EntitlementController", ["$scope", "entitlementService", "$modal
 	};
 
 	var href = location.href;
-	$scope.serviceURL = location.href + (href.lastIndexOf("/") == href.length - 1 ? "" : "/") + "services";
+	$scope.serviceURL = location.href + (href.lastIndexOf("/") == href.length - 1 ? "" : "/") + "services/index.php";
 
 	$scope.groupGridOptions = {
 		data: "groups",
