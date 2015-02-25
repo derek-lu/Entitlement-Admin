@@ -20,12 +20,24 @@ class output {
 	}
 
 	function get_json() {
-		return [
+		return json_encode([
 			'type' => $this->type,
 			'status' => $this->status,
 			'message' => $this->messages
-		];
+		]);
 	}
+}
+
+function _helper_check_connection($url) {
+	$curl = curl_init();
+	curl_setopt_array($curl, [
+		CURLOPT_CONNECTTIMEOUT => 5,
+		CURLOPT_HEADER => true,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_URL => $url
+	]);
+	$curl_response = curl_exec($curl);
+	return ($curl_response) ? true : false;
 }
 
 function check_config_file() {
@@ -66,20 +78,31 @@ function check_database_accessibility() {
 	return $result->get_json();
 }
 
-function check_database_initialization() {
-
-}
-
-function check_fullfillment_url_availability() {
-
+function check_fulfillment_url_availability() {
+	$result = new output('Checking the fulfillment server:');
+	$url = 'http://edge.adobe-dcfs.com/ddp/issueServer/issues?accountId';
+	$isConnected = _helper_check_connection($url);
+	if (!$isConnected)
+		$result->add_message('Unable to connect to the fulfillment server @ ' . $url);
+	return $result->get_json();
 }
 
 function check_http_connectivity() {
-
+	$result = new output('Checking HTTP connection:');
+	$url = 'http://www.adobe.com/';
+	$isConnected = _helper_check_connection($url);
+	if (!$isConnected)
+		$result->add_message('Unable to connect to ' . $url);
+	return $result->get_json();
 }
 
 function check_https_connectivity() {
-
+	$result = new output('Checking HTTPS connection:');
+	$url = 'https://www.google.com/';
+	$isConnected = _helper_check_connection($url);
+	if (!$isConnected)
+		$result->add_message('Unable to connect to ' . $url);
+	return $result->get_json();
 }
 
 function check_php_modules() {
@@ -93,12 +116,22 @@ function check_php_modules() {
 	return $result->get_json();
 }
 
-echo '<pre>';
-print_r(check_php_modules());
-print_r(check_config_file());
-print_r(check_database_accessibility());
-// check_database_initialization();
-// check_http_connectivity();
-// check_https_connectivity();
-// check_fullfillment_url_availability();
-echo '</pre>';
+$option = isset($_POST['option']) ? $_POST['option'] : '';
+switch ($option) {
+	case 'check_php_modules':
+		return check_php_modules();
+	case 'check_config_file':
+		return check_config_file();
+	case 'check_database_accessibility':
+		return check_database_accessibility();
+	case 'check_http_connectivity':
+		return check_http_connectivity();
+	case 'check_https_connectivity':
+		return check_https_connectivity();
+	case 'check_fulfillment_url_availability':
+		return check_fulfillment_url_availability();
+	default:
+		$result = new output('Checking post parameter:');
+		$result->add_message('Invalid post value.');
+		return $result->get_json();
+}
