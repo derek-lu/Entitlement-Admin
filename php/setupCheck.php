@@ -1,4 +1,5 @@
 <?php
+include_once 'utils.php';
 
 class output {
 	private $type;
@@ -106,6 +107,7 @@ function check_https_connectivity() {
 }
 
 function check_php_modules() {
+	error_log('hi', 0);
 	$result = new output('Checking php modules:');
 	if (!extension_loaded('mysql'))
 		$result->add_message('\'MySQL\' is not installed.');
@@ -116,22 +118,26 @@ function check_php_modules() {
 	return $result->get_json();
 }
 
-$option = isset($_POST['option']) ? $_POST['option'] : '';
+$option = isset($_POST['check']) ? escapeURLData($_POST['check']) : '';
+error_log($option, 0);
 switch ($option) {
-	case 'check_php_modules':
-		return check_php_modules();
-	case 'check_config_file':
-		return check_config_file();
-	case 'check_database_accessibility':
-		return check_database_accessibility();
-	case 'check_http_connectivity':
-		return check_http_connectivity();
-	case 'check_https_connectivity':
-		return check_https_connectivity();
-	case 'check_fulfillment_url_availability':
-		return check_fulfillment_url_availability();
+	case 'php_modules':
+		print(check_php_modules()); break;
+	case 'config_file':
+		print(check_config_file()); break;
+	case 'database_accessibility':
+		print(check_database_accessibility()); break;
+	case 'http_connectivity':
+		print(check_http_connectivity()); break;
+	case 'https_connectivity':
+		print(check_https_connectivity()); break;
+	case 'fulfillment_url_availability':
+		print(check_fulfillment_url_availability()); break;
 	default:
 		$result = new output('Checking post parameter:');
 		$result->add_message('Invalid post value.');
-		return $result->get_json();
+		print_r($result->get_json());
+		break;
 }
+
+return;

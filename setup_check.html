@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html ng-app="setup">
+<head>
+<title>Setup Check</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/ng-grid.min.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/styles.css" media="all" />
+
+<style type="text/css">
+/* need to put the styles here otherwise the values aren't available when the grids render. */
+.grid {
+  	border: 1px solid rgb(212,212,212);
+    width: 400px;
+    height: 300px;
+	margin-top: 20px;
+}
+</style>
+
+</head>
+<body ng-controller="setupController">
+
+	<div ng-repeat="data in response">
+		{{data.type}}
+		{{data.status}}
+		{{data.message}}
+	</div>
+
+	<div>
+		<button ng-click="check_php_modules()">PHP Modules</button>
+		<button ng-click="check_config_file()">Configuration</button>
+		<button ng-click="check_database_accessibility()">Database</button>
+		<button ng-click="check_http_connectivity()">HTTP Connection</button>
+		<button ng-click="check_https_connectivity()">HTTPS Connection</button>
+		<button ng-click="check_fulfillment_url_availability()">Fulfillment URL</button>
+	</div>
+
+<!-- jquery needed for ui-grid. -->
+<script src="libs/jquery.1.8.0.min.js"></script>
+<script src="libs/angular.1.2.9.min.js"></script>
+<script src="libs/ng-grid.min.js"></script>
+<script src="libs/ui-bootstrap-tpls-0.11.0.min.js"></script>
+<script src="libs/underscore-1.7.0.min.js"></script>
+<script src="libs/jquery.placeholder.js"></script>
+<script src="libs/angular-ui-utils/keypress.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
+
+<script type="text/javascript">
+var app = angular.module('setup', []);
+
+app.controller('setupController', function($scope, setupService) {
+	var response,
+		rawResponse;
+
+	$scope.check_php_modules = function() {
+		response = setupService.httpRequest('php_modules');
+	}
+	$scope.check_config_file = function() {
+		response = setupService.httpRequest('config_file');
+	}
+	$scope.check_database_accessibility = function() {
+		response = setupService.httpRequest('database_accessibility');
+	}
+	$scope.check_http_connectivity = function() {
+		response = setupService.httpRequest('http_connectivity');
+	}
+	$scope.check_https_connectivity = function() {
+		response = setupService.httpRequest('https_connectivity');
+	}
+	$scope.check_fulfillment_url_availability = function() {
+		response = setupService.httpRequest('fulfillment_url_availability');
+	}
+});
+
+app.service('setupService', ['$http', '$rootScope', function($http, $rootScope) {
+	return {
+		httpRequest: function(type) {
+			var xsrf = $.param({check: type});
+			return $http({
+					method: "POST",
+					url:"php/setupCheck.php",
+					data: xsrf,
+					headers: {"Content-Type": "application/x-www-form-urlencoded"}
+				}).then(function(response) {
+					return response.data;
+				}
+			);
+		}
+	};
+}]);
+</script>
+</body>
+</html>
