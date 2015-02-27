@@ -20,12 +20,12 @@ class output {
 		$this->messages[] = $msg;
 	}
 
-	function get_json() {
-		return json_encode([
+	function get() {
+		return [
 			'type' => $this->type,
 			'status' => $this->status,
-			'message' => $this->messages
-		]);
+			'content' => $this->messages
+		];
 	}
 }
 
@@ -58,7 +58,7 @@ function check_config_file() {
 		$result->add_message('The file \'php/settings.php\' is missing.');
 	}
 
-	return $result->get_json();
+	return $result->get();
 }
 
 function check_database_accessibility() {
@@ -76,7 +76,7 @@ function check_database_accessibility() {
 	} else {
 		$result->add_message('The file \'php/settings.php\' is missing.');
 	}
-	return $result->get_json();
+	return $result->get();
 }
 
 function check_fulfillment_url_availability() {
@@ -85,7 +85,7 @@ function check_fulfillment_url_availability() {
 	$isConnected = _helper_check_connection($url);
 	if (!$isConnected)
 		$result->add_message('Unable to connect to the fulfillment server @ ' . $url);
-	return $result->get_json();
+	return $result->get();
 }
 
 function check_http_connectivity() {
@@ -94,7 +94,7 @@ function check_http_connectivity() {
 	$isConnected = _helper_check_connection($url);
 	if (!$isConnected)
 		$result->add_message('Unable to connect to ' . $url);
-	return $result->get_json();
+	return $result->get();
 }
 
 function check_https_connectivity() {
@@ -103,11 +103,10 @@ function check_https_connectivity() {
 	$isConnected = _helper_check_connection($url);
 	if (!$isConnected)
 		$result->add_message('Unable to connect to ' . $url);
-	return $result->get_json();
+	return $result->get();
 }
 
 function check_php_modules() {
-	error_log('hi', 0);
 	$result = new output('Checking php modules:');
 	if (!extension_loaded('mysql'))
 		$result->add_message('\'MySQL\' is not installed.');
@@ -115,29 +114,37 @@ function check_php_modules() {
 		$result->add_message('\'MySQLi\' extension is not installed.');
 	if (!function_exists('curl_exec'))
 		$result->add_message('\'cURL\' extension is not installed.');
-	return $result->get_json();
+	return $result->get();
 }
 
 $option = isset($_POST['check']) ? escapeURLData($_POST['check']) : '';
-error_log($option, 0);
 switch ($option) {
 	case 'php_modules':
-		print(check_php_modules()); break;
+		$result[] = check_php_modules(); break;
 	case 'config_file':
-		print(check_config_file()); break;
+		$result[] = check_config_file(); break;
 	case 'database_accessibility':
-		print(check_database_accessibility()); break;
+		$result[] = check_database_accessibility(); break;
 	case 'http_connectivity':
-		print(check_http_connectivity()); break;
+		$result[] = check_http_connectivity(); break;
 	case 'https_connectivity':
-		print(check_https_connectivity()); break;
+		$result[] = check_https_connectivity(); break;
 	case 'fulfillment_url_availability':
-		print(check_fulfillment_url_availability()); break;
-	default:
-		$result = new output('Checking post parameter:');
-		$result->add_message('Invalid post value.');
-		print_r($result->get_json());
+		$result[] = check_fulfillment_url_availability(); break;
+	case 'all':
+		$result[] = check_php_modules();
+		$result[] = check_config_file();
+		$result[] = check_database_accessibility();
+		$result[] = check_http_connectivity();
+		$result[] = check_https_connectivity();
+		$result[] = check_fulfillment_url_availability();
+		break;
+	case 'test':
+		$error = new output('Checking post parameter:');
+		$error->add_message('Invalid post value.');
+		$result[] = $error->get();
 		break;
 }
 
+print_r(json_encode($result));
 return;

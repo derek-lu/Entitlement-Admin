@@ -7,32 +7,85 @@
 <link rel="stylesheet" type="text/css" href="css/styles.css" media="all" />
 
 <style type="text/css">
-/* need to put the styles here otherwise the values aren't available when the grids render. */
-.grid {
-  	border: 1px solid rgb(212,212,212);
-    width: 400px;
-    height: 300px;
-	margin-top: 20px;
-}
+	.main {
+		-webkit-box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 6px 3px;
+		background-color: rgb(255, 255, 255);
+		box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 6px 3px;
+		max-width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.headerImage img {
+		min-height: 170px;
+		min-width: 1200px;
+		width: 100%;
+	}
+
+	.container {
+		height: 750px;
+		margin: 20px auto 0 auto;
+	    width: 1000px;
+	}
+
+	.control {
+	  	border: 1px solid rgb(212,212,212);
+		float: left;
+		min-width: 150px;
+		max-width: 200px;
+		width: 20%;
+	}
+
+	.control button {
+		width: 150px;
+		margin: 20px 0 0 20px;
+	}
+
+	.control button:last-child {
+		margin-bottom: 20px;
+	}
+
+	.message-list {
+		float: right;
+		width: 80%;
+	}
+
+	.message {
+		margin: 20px 0 0 40px;
+		overflow: scroll;
+	}
+
+	.message .content {
+		margin-left: 10px;
+	}
 </style>
 
 </head>
 <body ng-controller="setupController">
 
-	<div ng-repeat="data in response">
-		{{data.type}}
-		{{data.status}}
-		{{data.message}}
+<div class="main">
+	<div class="headerImage">
+		<img src="images/header.jpg" />
 	</div>
-
-	<div>
-		<button ng-click="check_php_modules()">PHP Modules</button>
-		<button ng-click="check_config_file()">Configuration</button>
-		<button ng-click="check_database_accessibility()">Database</button>
-		<button ng-click="check_http_connectivity()">HTTP Connection</button>
-		<button ng-click="check_https_connectivity()">HTTPS Connection</button>
-		<button ng-click="check_fulfillment_url_availability()">Fulfillment URL</button>
+	<div class="container">
+		<div class="control">
+			<button ng-click="check('test')">All</button>
+			<button ng-click="check('php_modules')">PHP Modules</button>
+			<button ng-click="check('config_file')">Configuration</button>
+			<button ng-click="check('database_accessibility')">Database</button>
+			<button ng-click="check('http_connectivity')">HTTP Connection</button>
+			<button ng-click="check('https_connectivity')">HTTPS Connection</button>
+			<button ng-click="check('fulfillment_url_availability')">Fulfillment URL</button>
+		</div>
+		<div class="message-list">
+			<div class="message" ng-repeat="message in response">
+				<h4>{{message.type}}</h4>
+				<p>{{message.status}}</p>
+				<p class="content" ng-repeat="content in message.content">- {{content}}</p>
+			</div>
+		</div>
 	</div>
+</div>
 
 <!-- jquery needed for ui-grid. -->
 <script src="libs/jquery.1.8.0.min.js"></script>
@@ -48,26 +101,19 @@
 var app = angular.module('setup', []);
 
 app.controller('setupController', function($scope, setupService) {
-	var response,
-		rawResponse;
+	$scope.response = [{
+		'type': 'Setup checks:',
+		'content': ['Click one of the options on the left.']
+	}];
 
-	$scope.check_php_modules = function() {
-		response = setupService.httpRequest('php_modules');
-	}
-	$scope.check_config_file = function() {
-		response = setupService.httpRequest('config_file');
-	}
-	$scope.check_database_accessibility = function() {
-		response = setupService.httpRequest('database_accessibility');
-	}
-	$scope.check_http_connectivity = function() {
-		response = setupService.httpRequest('http_connectivity');
-	}
-	$scope.check_https_connectivity = function() {
-		response = setupService.httpRequest('https_connectivity');
-	}
-	$scope.check_fulfillment_url_availability = function() {
-		response = setupService.httpRequest('fulfillment_url_availability');
+	$scope.check = function(option) {
+		$scope.response = [];
+
+		setupService.httpRequest(option).then(function(data) {
+			for (var i = 0; i < data.length; i++) {
+				$scope.response.push(data[i]);
+			}
+		});
 	}
 });
 
