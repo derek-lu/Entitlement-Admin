@@ -61,7 +61,7 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 			}
 		}
 	});
-	
+
 	// Remove the handler when the scope is destroyed.
 	$scope.$on("$destroy", function() {
 		removeGetFoliosHandler();
@@ -98,7 +98,7 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 		// Set the default to the first one.
 		$scope.form.groupToAdd = $scope.form.availableGroups[0];
 	}
-	
+
 	$scope.removeFolio_clickHandler = function(isUserRemoved) {
 		if ($scope.form.folioToDelete) {
 			// Add the folio back to the list of available folios.
@@ -123,7 +123,7 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 			}
 		}
 	}
-	
+
 	$scope.removeGroup_clickHandler = function() {
 		if ($scope.form.groupToDelete) {
 			$scope.form.availableGroups.push($scope.form.groupToDelete);
@@ -214,7 +214,7 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 				$scope.form.userFolios = userFolios;
 
 				$scope.$userFoliosSelected.append(optionTags);
-				
+
 				// Make a copy of folios since it will change based on what the user already has assigned.
 				var availableFolios = folios.slice(0);
 
