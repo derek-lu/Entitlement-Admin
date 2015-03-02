@@ -15,28 +15,28 @@ class output {
 	function add_message($msg) {
 		if ($this->status === 'ok') {
 			$this->status = 'error';
-			$this->messages = [];
+			$this->messages = array();
 		}
-		$this->messages[] = $msg;
+		array_push($this->messages, $msg);
 	}
 
 	function get() {
-		return [
+		return array(
 			'type' => $this->type,
 			'status' => $this->status,
 			'content' => $this->messages
-		];
+		);
 	}
 }
 
 function _helper_check_connection($url) {
 	$curl = curl_init();
-	curl_setopt_array($curl, [
+	curl_setopt_array($curl, array(
 		CURLOPT_CONNECTTIMEOUT => 5,
 		CURLOPT_HEADER => true,
 		CURLOPT_RETURNTRANSFER => true,
 		CURLOPT_URL => $url
-	]);
+	));
 	$curl_response = curl_exec($curl);
 	return ($curl_response) ? true : false;
 }
@@ -117,32 +117,34 @@ function check_php_modules() {
 	return $result->get();
 }
 
-$option = isset($_POST['check']) ? escapeURLData($_POST['check']) : '';
+$option = isset($_POST['check']) ? escapeURLData($_POST['check']) : 'all';
+$result = array();
+
 switch ($option) {
 	case 'php_modules':
-		$result[] = check_php_modules(); break;
+		array_push($result, check_php_modules()); break;
 	case 'config_file':
-		$result[] = check_config_file(); break;
+		array_push($result, check_config_file()); break;
 	case 'database_accessibility':
-		$result[] = check_database_accessibility(); break;
+		array_push($result, check_database_accessibility()); break;
 	case 'http_connectivity':
-		$result[] = check_http_connectivity(); break;
+		array_push($result, check_http_connectivity()); break;
 	case 'https_connectivity':
-		$result[] = check_https_connectivity(); break;
+		array_push($result, check_https_connectivity()); break;
 	case 'fulfillment_url_availability':
-		$result[] = check_fulfillment_url_availability(); break;
+		array_push($result, check_fulfillment_url_availability()); break;
 	case 'all':
-		$result[] = check_php_modules();
-		$result[] = check_config_file();
-		$result[] = check_database_accessibility();
-		$result[] = check_http_connectivity();
-		$result[] = check_https_connectivity();
-		$result[] = check_fulfillment_url_availability();
+		array_push($result, check_php_modules());
+		array_push($result, check_config_file());
+		array_push($result, check_database_accessibility());
+		array_push($result, check_http_connectivity());
+		array_push($result, check_https_connectivity());
+		array_push($result, check_fulfillment_url_availability());
 		break;
-	case 'test':
+	default:
 		$error = new output('Checking post parameter:');
 		$error->add_message('Invalid post value.');
-		$result[] = $error->get();
+		array_push($result, $error->get());
 		break;
 }
 
