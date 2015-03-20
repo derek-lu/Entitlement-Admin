@@ -173,4 +173,8 @@ function setXMLHeader() {
 	Header("Content-Type: application/xml; charset=utf-8");
 }
 
+function doesExceedRequestMax($mysqli, $appId) {
+	return false;
+}
+
 ?>
