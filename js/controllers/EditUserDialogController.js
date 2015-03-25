@@ -1,5 +1,5 @@
 // Controller for the Edit User dialog.
-var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $timeout, entitlementService, user, folios, groups, config) {
+var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $timeout, entitlementService, user, folios, groups) {
 	// Placeholder for ie. Need to set at timeout otherwise the password fields can't be retrieved
 	$scope.partialInitHandler = function() {
 		setTimeout(function() {
