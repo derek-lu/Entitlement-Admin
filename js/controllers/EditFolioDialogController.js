@@ -1,5 +1,10 @@
 // Controller for the Edit Folio Dialog.
 var EditFolioDialogController = function ($scope, $modalInstance, entitlementService, folio, groups, users, guid) {
+	// Placeholder for ie. 
+	$scope.partialInitHandler = function() {
+		$("input").placeholder(); 
+	}
+	
 	// Data storage for the group name and description.
 	$scope.folio = {};
 	$scope.form = {};
@@ -43,6 +48,9 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 
 		// Set the default to the first one.
 		$scope.form.groupToAdd = $scope.form.availableGroups[0];
+
+		// IE HACK: need to force a redraw so the select items render correctly.
+		$scope.$folioGroupsSelected.css("width", 0).css("width", "").hide().show();
 	}
 
 	$scope.addUser_clickHandler = function() {
@@ -58,6 +66,9 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 
 		// Set the default to the first one.
 		$scope.form.userToAdd = $scope.form.availableUsers[0];
+
+		// IE HACK: need to force a redraw so the select items render correctly.
+		$scope.$folioUsersSelected.css("width", 0).css("width", "").hide().show();
 	}
 
 	$scope.removeFolio_clickHandler = function() {
@@ -183,7 +194,8 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 
 				$scope.form.availableGroups = availableGroups;
 
-				//$scope.form.groupToAdd = availableGroups[0];
+				// IE HACK: need to force a redraw so the select items render correctly.
+				$scope.$folioGroupsSelected.css("width", 0).css("width", "").hide().show();
 			} else {
 				alert(data.description);
 			}
@@ -234,7 +246,8 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 
 				$scope.form.availableUsers = availableUsers;
 
-				//$scope.form.userToAdd = availableUsers[0];
+				// IE HACK: need to force a redraw so the select items render correctly.
+				$scope.$folioUsersSelected.css("width", 0).css("width", "").hide().show();
 			} else {
 				alert(data.description);
 			}
