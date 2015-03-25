@@ -1,5 +1,12 @@
 // Controller for the Add User dialog.
 var AddUserDialogController = function ($scope, $modalInstance, entitlementService, guid) {
+	// Placeholder for ie. Need to set at timeout otherwise the password fields can't be retrieved
+	$scope.partialInitHandler = function() {
+		setTimeout(function() {
+			$("input").placeholder(); 
+		}, 10);
+	}
+	
 	// Data storage for the user name and description.
 	$scope.form = {};
 
