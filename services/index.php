@@ -12,11 +12,11 @@ require_once "../php/utils.php";
 $path_info = $_SERVER["PATH_INFO"];
 $call = substr($path_info,1);
 
-if ($call == "SignInWithCredentials" || $call == "RenewAuthToken" || $call == "entitlements" || $call == "CreateUser") {
+if ($call == "SignInWithCredentials" || $call == "RenewAuthToken" || $call == "entitlements" || $call == "RegisterUser") {
 	$mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 	switch ($call) {
-		case 'CreateUser':
-			CreateUser($mysqli);
+		case 'RegisterUser':
+			RegisterUser($mysqli);
 			break;
 		case "SignInWithCredentials":
 			SignInWithCredentials($mysqli);
@@ -87,7 +87,7 @@ function SignInWithCredentials($mysqli) {
 	}
 }
 
-function CreateUser($mysqli) {
+function RegisterUser($mysqli) {
 	$requestBody = file_get_contents('php://input');
 	$xml = simplexml_load_string($requestBody);
 
@@ -97,13 +97,17 @@ function CreateUser($mysqli) {
 	$password = escapeURLData($xml->password);
 	$csrfToken = escapeURLData($xml->csrfToken);
 
+	$httpResponseCode = '500';
+	$insert_id = '';
+	$error_msg = '';
+
 	if ($stmt = $mysqli->prepare("SELECT name FROM users WHERE guid = ? AND name = ?")) {
 		if ($stmt->bind_param("ss", $guid, $name)) {
 			$stmt->execute();
 			$stmt->store_result();
 
 			if ($stmt->num_rows > 0) { // The user name is already being used.
-				echo '{"success":false,"description":"User names must be unique. Please use a different name."}';
+				$error_msg = 'User names must be unique. Please use a different name.';
 			} else {
 				$salt = createSalt();
 				$hash = generateHash($password, $salt);
@@ -111,22 +115,37 @@ function CreateUser($mysqli) {
 				if ($stmt = $mysqli->prepare("INSERT INTO users (guid, name, description, password, salt) VALUES (?, ?, ?, ?, ?)")) {
 					if ($stmt->bind_param("sssss", $guid, $name, $description, $hash, $salt)) {
 						$stmt->execute();
-						echo '{"success":true, "id":' . $stmt->insert_id . '}';
+
+						$httpResponseCode = '200';
+						$insert_id = $stmt->insert_id;
 					} else {
-						echo '{"success":false,"description":"addUser - Binding insert parameters failed: (' . $mysqli->errno . ')' . $mysqli->error . '"}';
+						$httpResponseCode = $mysqli->errno;
+						$error_msg = $mysqli->error;
 					}
 				} else {
-					echo '{"success":false,"description":"addUser - Prepare insert failed: (' . $mysqli->errno . ')' . $mysqli->error . '"}';
+					$httpResponseCode = $mysqli->errno;
+					$error_msg = $mysqli->error;
 				}
 			}
 		} else {
-			echo '{"success":false,"description":"addUser - Binding parameters failed: (' . $mysqli->errno . ')' . $mysqli->error . '"}';
+			$httpResponseCode = $mysqli->errno;
+			$error_msg = $mysqli->error;
 		}
 	} else {
-   		echo '{"success":false,"description":"addUser - Prepare failed: (' . $mysqli->errno . ')' . $mysqli->error . '"}';
+		$httpResponseCode = $mysqli->errno;
+		$error_msg = $mysqli->error;
 	}
 
+	// Close database connection
 	$stmt->close();
+
+	// Initialize and return the response xml.
+	header("Content-Type: application/xml");
+	$xml = simplexml_load_string("<result/>");
+	$xml->addAttribute("httpResponseCode", $httpResponseCode);
+	$xml->addChild("id", $insert_id);
+	$xml->addChild("msg", $error_msg);
+	echo $xml->asXML();
 }
 
 function RenewAuthToken($mysqli) {

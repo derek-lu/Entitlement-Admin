@@ -25,6 +25,6 @@ $db_password = "root";
  * @example $db_name = "entitlement_admin";
  * Only change below if the database name was different than 'entitlement_admin'.
  */
-$db_name = "entitlement_admin";
+$db_name = "entitlement_mikey";
 
 ?>
