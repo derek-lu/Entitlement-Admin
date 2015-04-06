@@ -1,5 +1,12 @@
 // Controller for the Edit User dialog.
 var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $timeout, entitlementService, user, folios, groups) {
+	// Placeholder for ie. Need to set at timeout otherwise the password fields can't be retrieved
+	$scope.partialInitHandler = function() {
+		setTimeout(function() {
+			$("input").placeholder(); 
+		}, 10);
+	}
+
 	// Data storage for the user name and description.
 	$scope.form = {};
 
@@ -61,7 +68,7 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 			}
 		}
 	});
-	
+
 	// Remove the handler when the scope is destroyed.
 	$scope.$on("$destroy", function() {
 		removeGetFoliosHandler();
@@ -81,6 +88,9 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 
 		// Set the default to the first one.
 		$scope.form.folioToAdd = $scope.form.availableFolios[0];
+
+		// IE HACK: need to force a redraw so the select items render correctly.
+		$scope.$userFoliosSelected.css("width", 0).css("width", "").hide().show();
 	}
 
 	$scope.addGroup_clickHandler = function() {
@@ -97,8 +107,11 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 
 		// Set the default to the first one.
 		$scope.form.groupToAdd = $scope.form.availableGroups[0];
+
+		// IE HACK: need to force a redraw so the select items render correctly.
+		$scope.$userGroupsSelected.css("width", 0).css("width", "").hide().show();
 	}
-	
+
 	$scope.removeFolio_clickHandler = function(isUserRemoved) {
 		if ($scope.form.folioToDelete) {
 			// Add the folio back to the list of available folios.
@@ -123,7 +136,7 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 			}
 		}
 	}
-	
+
 	$scope.removeGroup_clickHandler = function() {
 		if ($scope.form.groupToDelete) {
 			$scope.form.availableGroups.push($scope.form.groupToDelete);
@@ -214,7 +227,7 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 				$scope.form.userFolios = userFolios;
 
 				$scope.$userFoliosSelected.append(optionTags);
-				
+
 				// Make a copy of folios since it will change based on what the user already has assigned.
 				var availableFolios = folios.slice(0);
 
@@ -227,6 +240,9 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 				}
 
 				$scope.form.availableFolios = availableFolios;
+
+				// IE HACK: need to force a redraw so the select items render correctly.
+				$scope.$userFoliosSelected.css("width", 0).css("width", "").hide().show();
 			} else {
 				alert(data.description);
 			}
@@ -275,7 +291,8 @@ var EditUserDialogController = function ($scope, $modalInstance, $rootScope, $ti
 
 				$scope.form.availableGroups = availableGroups;
 
-				//$scope.form.groupToAdd = availableGroups[0];
+				// IE HACK: need to force a redraw so the select items render correctly.
+				$scope.$userGroupsSelected.css("width", 0).css("width", "").hide().show();
 			} else {
 				alert(data.description);
 			}

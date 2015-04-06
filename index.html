@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="entitlementAdmin">
+<html>
 <head>
 <title>Entitlement Admin</title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -24,6 +24,7 @@
 	<div id="login-form-container">
 		<form id="login-form"
 			name="loginForm"
+			ui-keypress="{13:'submit()'}"
 			ng-submit="submit()">
 			<div id="login-header-container">
 				<img src="images/dps_logo.gif" width="34" height="33">
@@ -45,12 +46,14 @@
 				required
 				ng-minlength="1"
 				placeholder="Password">
-			<input type="submit"
+			<div
 				id="login-button"
+				ng-click="submit()"
 				value="Sign in"
 				class="btn btn-primary btn-sm"
 				ng-class="{'busy-cursor': isValidating==true}">
-
+				Sign In
+			</div>
 			<div class="login-submit-error"
 				ng-bind="loginErrorMessage">
 			</div>
@@ -220,8 +223,12 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	// For IE placeholder
 	$('input, textarea').placeholder();
-});
+
+	// Need to manually bootstrap the module otherwise an exception might happen on ie9.
+	angular.bootstrap(document, ["entitlementAdmin"]);
+})
 </script>
 </body>
 </html>

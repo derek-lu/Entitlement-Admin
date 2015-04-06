@@ -1,5 +1,10 @@
 // Controller for the Add Group dialog.
 var AddGroupDialogController = function ($scope, $modalInstance, entitlementService, guid) {
+	// Placeholder for ie. 
+	$scope.partialInitHandler = function() {
+		$("input").placeholder(); 
+	}
+
 	// Data storage for the group name and description.
 	$scope.form = {};
 

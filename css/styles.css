@@ -26,11 +26,6 @@ input {
 	font-size: 13px;
 }
 
-#login-container input[type=submit] {
-    font-size: 15px;
-	height: 36px;
-}
-
 button {
     font-size: 13px;
 }
@@ -125,6 +120,9 @@ input[type=input], input[type=text], input[type=password] {
 
 #login-button {
 	width: 345px;
+    	font-size: 15px;
+	height: 36px;
+	margin-top: 30px;
 }
 
 .login-submit-error {
@@ -179,7 +177,7 @@ input[type=input], input[type=text], input[type=password] {
 }
 
 #password-input {
-	margin-bottom: 30px;
+	margin-bottom: 0px;
 }
 
 #logged-in-container-outer {
@@ -233,6 +231,12 @@ input[type=input], input[type=text], input[type=password] {
 	white-space: nowrap;
 	margin: 0px;
 	clear: both;
+	position: relative;
+}
+
+.row-select {
+	height: 36px;
+	margin-bottom: 10px;
 }
 
 #logged-in-content-container .row, #login-container .row {
@@ -363,16 +367,22 @@ input[type=input], input[type=text], input[type=password] {
 
 .dialog-add-select {
 	width: 511px;
+	position: absolute;
+	left:0px;
 }
 
 .dialog-add-select, .dialog-add-button {
 	display: inline-block;
 }
 
+.dialog-add-button {
+	float: right;
+}
+
 .dialog-select-label {
 	font-size: 17px;
-	position: relative;
-	top: 12px;
+	margin-top: 10px;
+	clear: both;
 }
 
 select {
@@ -393,8 +403,6 @@ select {
 }
 
 .dialog-add-button {
-	position: relative;
-	top: 17px;
 	margin-left: 7px;
 	width: 36px;
 	height: 36px;

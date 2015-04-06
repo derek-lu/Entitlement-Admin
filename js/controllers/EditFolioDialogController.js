@@ -1,5 +1,10 @@
 // Controller for the Edit Folio Dialog.
 var EditFolioDialogController = function ($scope, $modalInstance, entitlementService, folio, groups, users, guid) {
+	// Placeholder for ie. 
+	$scope.partialInitHandler = function() {
+		$("input").placeholder(); 
+	}
+	
 	// Data storage for the group name and description.
 	$scope.folio = {};
 	$scope.form = {};
@@ -43,6 +48,9 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 
 		// Set the default to the first one.
 		$scope.form.groupToAdd = $scope.form.availableGroups[0];
+
+		// IE HACK: need to force a redraw so the select items render correctly.
+		$scope.$folioGroupsSelected.css("width", 0).css("width", "").hide().show();
 	}
 
 	$scope.addUser_clickHandler = function() {
@@ -58,8 +66,11 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 
 		// Set the default to the first one.
 		$scope.form.userToAdd = $scope.form.availableUsers[0];
+
+		// IE HACK: need to force a redraw so the select items render correctly.
+		$scope.$folioUsersSelected.css("width", 0).css("width", "").hide().show();
 	}
-	
+
 	$scope.removeFolio_clickHandler = function() {
 		if ($scope.form.groupToDelete) {
 			$scope.form.availableGroups.push($scope.form.groupToDelete);
@@ -82,7 +93,7 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 			}
 		}
 	}
-	
+
 	$scope.removeUser_clickHandler = function() {
 		var user = $scope.form.userToDelete;
 		if (user) {
@@ -153,7 +164,7 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 				var optionTags = "";
 				_.each(data.groups, function(element) { // Loop through the returned groups.
 					var group = _.find(groups, {id: element}); // Get the group object for the group id.
-					folioGroups.push(group); 
+					folioGroups.push(group);
 					optionTags += "<option value='" + group.id + "'>" + group.name + "</option>"
 				});
 
@@ -183,7 +194,8 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 
 				$scope.form.availableGroups = availableGroups;
 
-				//$scope.form.groupToAdd = availableGroups[0];
+				// IE HACK: need to force a redraw so the select items render correctly.
+				$scope.$folioGroupsSelected.css("width", 0).css("width", "").hide().show();
 			} else {
 				alert(data.description);
 			}
@@ -204,7 +216,7 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 				var optionTags = "";
 				_.each(data.users, function(element) { // Loop through the returned users.
 					var user = _.find(users, {id: element}); // Get the group object for the group id.
-					folioUsers.push(user); 
+					folioUsers.push(user);
 					optionTags += "<option value='" + user.id + "'>" + user.name + "</option>"
 				});
 
@@ -234,7 +246,8 @@ var EditFolioDialogController = function ($scope, $modalInstance, entitlementSer
 
 				$scope.form.availableUsers = availableUsers;
 
-				//$scope.form.userToAdd = availableUsers[0];
+				// IE HACK: need to force a redraw so the select items render correctly.
+				$scope.$folioUsersSelected.css("width", 0).css("width", "").hide().show();
 			} else {
 				alert(data.description);
 			}

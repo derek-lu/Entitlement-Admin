@@ -3,7 +3,7 @@
 	ng-class="{'busy-cursor': form.isGettingFoliosForGroup==true}">
     <h4 class="modal-title">Edit Group</h4>
 </div>
-<div class="modal-body" ng-class="{'busy-cursor': form.isGettingFoliosForGroup==true}">
+<div class="modal-body" ng-class="{'busy-cursor': form.isGettingFoliosForGroup==true}" ng-init="partialInitHandler()">
 	<form id="edit-group-form"
 		ui-keypress="{13:'ok_clickHandler()'}">
 		<div class="row">
@@ -24,8 +24,8 @@
 			ng-model="form.description"
 			placeholder="Description">
 
-		<div class="row">
-			<div class="dialog-select-label">Entitle Group to Folios</div>
+		<div class="dialog-select-label">Entitle Group to Folios</div>
+		<div class="row row-select">
 			<select
 				ng-model="form.folioToAdd"
 				class="dialog-add-select"
@@ -47,8 +47,8 @@
 			ng-click="removeFolio_clickHandler(true)"
 			ng-disabled="!form.folioToDelete">Remove</button>
 
-		<div class="row">
-			<div class="dialog-select-label">Add Users to Group</div>
+		<div class="dialog-select-label">Add Users to Group</div>
+		<div class="row row-select">
 			<select
 				ng-model="form.userToAdd"
 				class="dialog-add-select"

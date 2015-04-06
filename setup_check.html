@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html ng-app="setup">
+<head>
+<title>Setup Check</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/ng-grid.min.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/styles.css" media="all" />
+
+<style type="text/css">
+	.main {
+		-webkit-box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 6px 3px;
+		background-color: rgb(255, 255, 255);
+		box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 6px 3px;
+		max-width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.headerImage img {
+		min-height: 170px;
+		min-width: 1200px;
+		width: 100%;
+	}
+
+	.container {
+		height: 750px;
+		margin: 20px auto 0 auto;
+	    width: 1000px;
+	}
+
+	.control {
+	  	border: 1px solid rgb(212,212,212);
+		float: left;
+		min-width: 150px;
+		max-width: 200px;
+		width: 20%;
+	}
+
+	.control button {
+		width: 150px;
+		margin: 20px 0 0 20px;
+	}
+
+	.control button:last-child {
+		margin-bottom: 20px;
+	}
+
+	.message-list {
+		float: right;
+		width: 80%;
+	}
+
+	.message {
+		margin: 20px 0 0 40px;
+		overflow: scroll;
+	}
+
+	.message .content {
+		margin-left: 10px;
+	}
+</style>
+
+</head>
+<body ng-controller="setupController">
+
+<div class="main">
+	<div class="headerImage">
+		<img src="images/header.jpg" />
+	</div>
+	<div class="container">
+		<div class="control">
+			<button ng-click="check('all')">All</button>
+			<button ng-click="check('php_modules')">PHP Modules</button>
+			<button ng-click="check('config_file')">Configuration</button>
+			<button ng-click="check('database_accessibility')">Database</button>
+			<button ng-click="check('http_connectivity')">HTTP Connection</button>
+			<button ng-click="check('https_connectivity')">HTTPS Connection</button>
+			<button ng-click="check('fulfillment_url_availability')">Fulfillment URL</button>
+		</div>
+		<div class="message-list">
+			<div class="message" ng-repeat="message in response">
+				<h4>{{message.type}}</h4>
+				<p>{{message.status}}</p>
+				<p class="content" ng-repeat="content in message.content">- {{content}}</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- jquery needed for ui-grid. -->
+<script src="libs/jquery.1.8.0.min.js"></script>
+<script src="libs/angular.1.2.9.min.js"></script>
+<script src="libs/ng-grid.min.js"></script>
+<script src="libs/ui-bootstrap-tpls-0.11.0.min.js"></script>
+<script src="libs/underscore-1.7.0.min.js"></script>
+<script src="libs/jquery.placeholder.js"></script>
+<script src="libs/angular-ui-utils/keypress.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
+
+<script type="text/javascript">
+var app = angular.module('setup', []);
+
+app.controller('setupController', function($scope, setupService) {
+	$scope.response = [{
+		'type': 'Setup checks:',
+		'content': ['Click one of the options on the left.']
+	}];
+
+	$scope.check = function(option) {
+		$scope.response = [];
+
+		setupService.httpRequest(option).then(function(data) {
+			for (var i = 0; i < data.length; i++) {
+				$scope.response.push(data[i]);
+			}
+		});
+	}
+});
+
+app.service('setupService', ['$http', '$rootScope', function($http, $rootScope) {
+	return {
+		httpRequest: function(type) {
+			var xsrf = $.param({check: type});
+			return $http({
+					method: "POST",
+					url:"php/setupCheck.php",
+					data: xsrf,
+					headers: {"Content-Type": "application/x-www-form-urlencoded"}
+				}).then(function(response) {
+					return response.data;
+				}
+			);
+		}
+	};
+}]);
+</script>
+</body>
+</html>

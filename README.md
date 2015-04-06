@@ -4,4 +4,6 @@ For information on how to install this admin go to http://www.adobe.com/devnet/d
 
 For information on how to use this admin go to http://www.adobe.com/devnet/digitalpublishingsuite/articles/how-use-dps-entitlement-service.html.
 
+For information on how to test your installation, please read [this](SETUPTEST.md).
+
 http://www.adobe.com/support/downloads/license.html

@@ -40,11 +40,6 @@ function SignInWithCredentials($mysqli) {
 	$password = escapeURLData($xml->password);
 
 	$appId = escapeURLData($_REQUEST["appId"]);
-	// Make sure this app hasn't exceeded the number of requests in a 24 hour period.
-	if (!$appId || doesExceedRequestMax($mysqli, $appId)) {
-		returnErrorResponse();
-		exit;
-	}
 
 	// Check for a matching guid before proceeding.
 	$stmt = $mysqli->prepare("SELECT guid FROM app_ids WHERE app_id = ?");
@@ -142,13 +137,6 @@ function CreateUser($mysqli) {
 }
 
 function RenewAuthToken($mysqli) {
-	$appId = escapeURLData($_REQUEST["appId"]);
-	// Make sure this app hasn't exceeded the number of requests in a 24 hour period.
-	if (!$appId || doesExceedRequestMax($mysqli, $appId)) {
-		returnErrorResponse();
-		exit;
-	}
-
 	$authToken = escapeURLData($_REQUEST["authToken"]);
 
 	$stmt = $mysqli->prepare("SELECT id FROM users WHERE auth_token = ?");
@@ -170,13 +158,6 @@ function RenewAuthToken($mysqli) {
 }
 
 function entitlements($mysqli) {
-	$appId = escapeURLData($_REQUEST["appId"]);
-	// Make sure this app hasn't exceeded the number of requests in a 24 hour period.
-	if (!$appId || doesExceedRequestMax($mysqli, $appId)) {
-		returnErrorResponse();
-		exit;
-	}
-
 	$authToken = escapeURLData($_REQUEST["authToken"]);
 
 	// Get the group id for this authToken.
