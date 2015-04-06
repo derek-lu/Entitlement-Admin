@@ -12,9 +12,12 @@ require_once "../php/utils.php";
 $path_info = $_SERVER["PATH_INFO"];
 $call = substr($path_info,1);
 
-if ($call == "SignInWithCredentials" || $call == "RenewAuthToken" || $call == "entitlements") {
+if ($call == "SignInWithCredentials" || $call == "RenewAuthToken" || $call == "entitlements" || $call == "CreateUser") {
 	$mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 	switch ($call) {
+		case 'CreateUser':
+			CreateUser($mysqli);
+			break;
 		case "SignInWithCredentials":
 			SignInWithCredentials($mysqli);
 			break;
@@ -79,7 +82,7 @@ function SignInWithCredentials($mysqli) {
 		$stmt = $mysqli->prepare("UPDATE users SET auth_token = ? WHERE guid = ? AND name = ? ");
 		$stmt->bind_param("sss", $authToken, $guid, $emailAddress);
 		$stmt->execute();
-		
+
 		// Output the success xml.
 		header("Content-Type: application/xml");
 		$xml = simplexml_load_string("<result/>");
@@ -87,6 +90,55 @@ function SignInWithCredentials($mysqli) {
 		$xml->addChild("authToken", $authToken);
 		echo $xml->asXML();
 	}
+}
+
+function CreateUser($mysqli) {
+	$requestBody = file_get_contents('php://input');
+	$xml = simplexml_load_string($requestBody);
+
+	$guid = escapeURLData($xml->guid);
+	$name = escapeURLData($xml->name);
+	$description = escapeURLData($xml->description);
+	$password = escapeURLData($xml->password);
+	$csrfToken = escapeURLData($xml->csrfToken);
+
+	// Make sure this app hasn't exceeded the number of requests in a 24 hour period.
+	if (doesExceedRequestMax($mysqli, $appId)) {
+		returnErrorResponse();
+		exit;
+	}
+
+	if ($stmt = $mysqli->prepare("SELECT name FROM users WHERE guid = ? AND name = ?")) {
+		if ($stmt->bind_param("ss", $guid, $name)) {
+			$stmt->execute();
+			$stmt->store_result();
+
+			if ($stmt->num_rows > 0) { // The user name is already being used.
+				echo '{"success":false,"description":"User names must be unique. Please use a different name."}';
+			} else {
+				$salt = createSalt();
+				$hash = generateHash($password, $salt);
+
+				if ($stmt = $mysqli->prepare("INSERT INTO users (guid, name, description, password, salt) VALUES (?, ?, ?, ?, ?)")) {
+					$description = escapeURLData($_POST["description"]);
+					if ($stmt->bind_param("sssss", $guid, $name, $description, $hash, $salt)) {
+						$stmt->execute();
+						echo '{"success":true, "id":' . $stmt->insert_id . '}';
+					} else {
+						echo '{"success":false,"description":"addUser - Binding insert parameters failed: (' . $mysqli->errno . ')' . $mysqli->error . '"}';
+					}
+				} else {
+					echo '{"success":false,"description":"addUser - Prepare insert failed: (' . $mysqli->errno . ')' . $mysqli->error . '"}';
+				}
+			}
+		} else {
+			echo '{"success":false,"description":"addUser - Binding parameters failed: (' . $mysqli->errno . ')' . $mysqli->error . '"}';
+		}
+	} else {
+   		echo '{"success":false,"description":"addUser - Prepare failed: (' . $mysqli->errno . ')' . $mysqli->error . '"}';
+	}
+
+	$stmt->close();
 }
 
 function RenewAuthToken($mysqli) {
