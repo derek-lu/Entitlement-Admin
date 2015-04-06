@@ -144,7 +144,7 @@ function RegisterUser($mysqli) {
 	$xml = simplexml_load_string("<result/>");
 	$xml->addAttribute("httpResponseCode", $httpResponseCode);
 	$xml->addChild("id", $insert_id);
-	$xml->addChild("msg", $error_msg);
+	$xml->addChild("error", $error_msg);
 	echo $xml->asXML();
 }
 

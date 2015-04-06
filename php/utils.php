@@ -46,6 +46,7 @@ function returnErrorResponse() {
 	$xml = simplexml_load_string("<result/>");
 	// Return an error response.
 	$xml->addAttribute("httpResponseCode", '401');
+	$xml->addChild("error", 'Unauthorized Access');
 	echo $xml->asXML();
 }
 
