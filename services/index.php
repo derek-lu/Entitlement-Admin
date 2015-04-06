@@ -97,12 +97,6 @@ function CreateUser($mysqli) {
 	$password = escapeURLData($xml->password);
 	$csrfToken = escapeURLData($xml->csrfToken);
 
-	// Make sure this app hasn't exceeded the number of requests in a 24 hour period.
-	if (doesExceedRequestMax($mysqli, $appId)) {
-		returnErrorResponse();
-		exit;
-	}
-
 	if ($stmt = $mysqli->prepare("SELECT name FROM users WHERE guid = ? AND name = ?")) {
 		if ($stmt->bind_param("ss", $guid, $name)) {
 			$stmt->execute();
