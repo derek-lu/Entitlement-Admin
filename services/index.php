@@ -109,7 +109,6 @@ function CreateUser($mysqli) {
 				$hash = generateHash($password, $salt);
 
 				if ($stmt = $mysqli->prepare("INSERT INTO users (guid, name, description, password, salt) VALUES (?, ?, ?, ?, ?)")) {
-					$description = escapeURLData($_POST["description"]);
 					if ($stmt->bind_param("sssss", $guid, $name, $description, $hash, $salt)) {
 						$stmt->execute();
 						echo '{"success":true, "id":' . $stmt->insert_id . '}';
