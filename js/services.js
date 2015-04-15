@@ -60,7 +60,7 @@ app.service("entitlementService", ["$http", "$rootScope", function($http, $rootS
 											var pubDate = childNode.firstChild.nodeValue.split("-");
 											var date = new Date(pubDate[0], Number(pubDate[1]) - 1, pubDate[2].substr(0, 2));
 											folio["publicationDate"] = date;
-										} else {
+										} else if (childNode.firstChild) {
 											folio[childNode.nodeName] = childNode.firstChild.nodeValue;
 										}
 									}
