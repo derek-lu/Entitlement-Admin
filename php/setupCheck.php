@@ -79,6 +79,20 @@ function check_database_accessibility() {
 	return $result->get();
 }
 
+function check_cross_domain_access() {
+	$result = new output('Checking cross domain access: ');
+	if (!ini_get('allow_url_fopen'))
+		$result->add_message('The PHP configuration for "allow_url_fopen" is disabled');
+	try {
+		$xml = file_get_contents('http://edge.adobe-dcfs.com/ddp/issueServer/issues?targetDimension=all&accountId');
+		if (!$xml)
+			$result->add_message('Cannot read from the Fulfillment Feed');
+	} catch (Exception $e) {
+		$result->add_message('File Get Error: ' . $e->getMessage());
+	}
+	return $result->get();
+}
+
 function check_fulfillment_url_availability() {
 	$result = new output('Checking the fulfillment server:');
 	$url = 'http://edge.adobe-dcfs.com/ddp/issueServer/issues?accountId';
@@ -114,6 +128,8 @@ function check_php_modules() {
 		$result->add_message('\'MySQLi\' extension is not installed.');
 	if (!function_exists('curl_exec'))
 		$result->add_message('\'cURL\' extension is not installed.');
+	if (!function_exists('file_get_contents'))
+		$result->add_message('\'file_get_contents\' extension is not installed.');
 	return $result->get();
 }
 
@@ -122,17 +138,26 @@ $result = array();
 
 switch ($option) {
 	case 'php_modules':
-		array_push($result, check_php_modules()); break;
+		array_push($result, check_php_modules());
+		break;
 	case 'config_file':
-		array_push($result, check_config_file()); break;
+		array_push($result, check_config_file());
+		break;
 	case 'database_accessibility':
-		array_push($result, check_database_accessibility()); break;
+		array_push($result, check_database_accessibility());
+		break;
 	case 'http_connectivity':
-		array_push($result, check_http_connectivity()); break;
+		array_push($result, check_http_connectivity());
+		break;
 	case 'https_connectivity':
-		array_push($result, check_https_connectivity()); break;
+		array_push($result, check_https_connectivity());
+		break;
 	case 'fulfillment_url_availability':
-		array_push($result, check_fulfillment_url_availability()); break;
+		array_push($result, check_fulfillment_url_availability());
+		break;
+	case 'cross_domain_access':
+		array_push($result, check_cross_domain_access());
+		break;
 	case 'all':
 		array_push($result, check_php_modules());
 		array_push($result, check_config_file());
@@ -140,6 +165,7 @@ switch ($option) {
 		array_push($result, check_http_connectivity());
 		array_push($result, check_https_connectivity());
 		array_push($result, check_fulfillment_url_availability());
+		array_push($result, check_cross_domain_access());
 		break;
 	default:
 		$error = new output('Checking post parameter:');

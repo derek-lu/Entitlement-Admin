@@ -76,6 +76,7 @@
 			<button ng-click="check('http_connectivity')">HTTP Connection</button>
 			<button ng-click="check('https_connectivity')">HTTPS Connection</button>
 			<button ng-click="check('fulfillment_url_availability')">Fulfillment URL</button>
+			<button ng-click="check('cross_domain_access')">Cross Domain Access</button>
 		</div>
 		<div class="message-list">
 			<div class="message" ng-repeat="message in response">
@@ -114,7 +115,7 @@ app.controller('setupController', function($scope, setupService) {
 				$scope.response.push(data[i]);
 			}
 		});
-	}
+	};
 });
 
 app.service('setupService', ['$http', '$rootScope', function($http, $rootScope) {
