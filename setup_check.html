@@ -76,12 +76,13 @@
 			<button ng-click="check('http_connectivity')">HTTP Connection</button>
 			<button ng-click="check('https_connectivity')">HTTPS Connection</button>
 			<button ng-click="check('fulfillment_url_availability')">Fulfillment URL</button>
+			<button ng-click="check('cross_domain_access')">Cross Domain Access</button>
 		</div>
 		<div class="message-list">
 			<div class="message" ng-repeat="message in response">
 				<h4>{{message.type}}</h4>
-				<p>{{message.status}}</p>
-				<p class="content" ng-repeat="content in message.content">- {{content}}</p>
+				<p>Status: {{message.status}}</p>
+				<p class="content" ng-repeat="content in message.contents">- {{content}}</p>
 			</div>
 		</div>
 	</div>
@@ -103,7 +104,8 @@ var app = angular.module('setup', []);
 app.controller('setupController', function($scope, setupService) {
 	$scope.response = [{
 		'type': 'Setup checks:',
-		'content': ['Click one of the options on the left.']
+		'status': 'ok',
+		'contents': ['Click one of the options on the left.']
 	}];
 
 	$scope.check = function(option) {
@@ -114,7 +116,7 @@ app.controller('setupController', function($scope, setupService) {
 				$scope.response.push(data[i]);
 			}
 		});
-	}
+	};
 });
 
 app.service('setupService', ['$http', '$rootScope', function($http, $rootScope) {
@@ -127,6 +129,7 @@ app.service('setupService', ['$http', '$rootScope', function($http, $rootScope) 
 					data: xsrf,
 					headers: {"Content-Type": "application/x-www-form-urlencoded"}
 				}).then(function(response) {
+					console.log(response.data);
 					return response.data;
 				}
 			);
