@@ -1,7 +1,7 @@
 <?php
 include_once 'utils.php';
 
-class output {
+class Output {
 	private $type;
 	private $status;
 	private $messages;
@@ -9,22 +9,19 @@ class output {
 	function __construct($type) {
 		$this->type = $type;
 		$this->status = 'ok';
-		$this->messages = null;
+		$this->messages = array();
 	}
 
-	function add_message($msg) {
-		if ($this->status === 'ok') {
-			$this->status = 'error';
-			$this->messages = array();
-		}
-		array_push($this->messages, $msg);
+	function add_error_message($msg) {
+		$this->status = 'error';
+		array_push($this->messages, $msg . ': invalid');
 	}
 
-	function get() {
+	function get_results() {
 		return array(
 			'type' => $this->type,
 			'status' => $this->status,
-			'content' => $this->messages
+			'contents' => $this->messages
 		);
 	}
 }
@@ -42,27 +39,27 @@ function _helper_check_connection($url) {
 }
 
 function check_config_file() {
-	$result = new output('Checking php/settings.php:');
+	$output = new Output('Checking if values are set in "php/settings.php":');
 	if (file_exists('settings.php')) {
 		include 'settings.php';
 
 		if (!isset($db_host))
-			$result->add_message('Missing value: \'$db_host\'.');
+			$output->add_error_message('$db_host is missing');
 		if (!isset($db_user))
-			$result->add_message('Missing value: \'$db_user\'.');
+			$output->add_error_message('$db_user is missing');
 		if (!isset($db_password))
-			$result->add_message('Missing value: \'$db_password\'.');
+			$output->add_error_message('$db_password is missing');
 		if (!isset($db_name))
-			$result->add_message('Missing value: \'$db_name\'.');
+			$output->add_error_message('$db_name is missing');
 	} else {
-		$result->add_message('The file \'php/settings.php\' is missing.');
+		$output->add_error_message('The file "php/settings.php" is missing.');
 	}
 
-	return $result->get();
+	return $output->get_results();
 }
 
 function check_database_accessibility() {
-	$result = new output('Checking database accessibility:');
+	$output = new Output('Checking database accessibility:');
 	if (file_exists('settings.php')) {
 		include 'settings.php';
 
@@ -72,107 +69,107 @@ function check_database_accessibility() {
 		$db_name = isset($db_name) ? $db_name : '';
 		$mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 		if ($mysqli->connect_errno)
-			$result->add_message($mysqli->connect_error);
+			$output->add_error_message($mysqli->connect_error);
 	} else {
-		$result->add_message('The file \'php/settings.php\' is missing.');
+		$output->add_error_message('The file \'php/settings.php\' is missing.');
 	}
-	return $result->get();
+	return $output->get_results();
 }
 
 function check_cross_domain_access() {
-	$result = new output('Checking cross domain access: ');
+	$output = new Output('Checking cross domain access: ');
 	if (!ini_get('allow_url_fopen'))
-		$result->add_message('The PHP configuration for "allow_url_fopen" is disabled');
+		$output->add_error_message('The PHP configuration for "allow_url_fopen" is disabled');
 	try {
 		$xml = file_get_contents('http://edge.adobe-dcfs.com/ddp/issueServer/issues?targetDimension=all&accountId');
 		if (!$xml)
-			$result->add_message('Cannot read from the Fulfillment Feed');
+			$output->add_error_message('Cannot read from the fulfillment feed');
 	} catch (Exception $e) {
-		$result->add_message('File Get Error: ' . $e->getMessage());
+		$output->add_error_message('Exception: ' . $e->getMessage());
 	}
-	return $result->get();
+	return $output->get_results();
 }
 
 function check_fulfillment_url_availability() {
-	$result = new output('Checking the fulfillment server:');
+	$output = new Output('Checking the fulfillment server:');
 	$url = 'http://edge.adobe-dcfs.com/ddp/issueServer/issues?accountId';
 	$isConnected = _helper_check_connection($url);
 	if (!$isConnected)
-		$result->add_message('Unable to connect to the fulfillment server @ ' . $url);
-	return $result->get();
+		$output->add_error_message('Unable to connect to the fulfillment server @ ' . $url);
+	return $output->get_results();
 }
 
 function check_http_connectivity() {
-	$result = new output('Checking HTTP connection:');
+	$output = new Output('Checking HTTP connection:');
 	$url = 'http://www.adobe.com/';
 	$isConnected = _helper_check_connection($url);
 	if (!$isConnected)
-		$result->add_message('Unable to connect to ' . $url);
-	return $result->get();
+		$output->add_error_message('Unable to connect to ' . $url);
+	return $output->get_results();
 }
 
 function check_https_connectivity() {
-	$result = new output('Checking HTTPS connection:');
+	$output = new Output('Checking HTTPS connection:');
 	$url = 'https://www.google.com/';
 	$isConnected = _helper_check_connection($url);
 	if (!$isConnected)
-		$result->add_message('Unable to connect to ' . $url);
-	return $result->get();
+		$output->add_error_message('Unable to connect to ' . $url);
+	return $output->get_results();
 }
 
 function check_php_modules() {
-	$result = new output('Checking php modules:');
+	$output = new Output('Checking php modules:');
 	if (!extension_loaded('mysql'))
-		$result->add_message('\'MySQL\' is not installed.');
+		$output->add_error_message('\'MySQL\' is not installed.');
 	if (!function_exists('mysqli_connect'))
-		$result->add_message('\'MySQLi\' extension is not installed.');
+		$output->add_error_message('\'MySQLi\' extension is not installed.');
 	if (!function_exists('curl_exec'))
-		$result->add_message('\'cURL\' extension is not installed.');
+		$output->add_error_message('\'cURL\' extension is not installed.');
 	if (!function_exists('file_get_contents'))
-		$result->add_message('\'file_get_contents\' extension is not installed.');
-	return $result->get();
+		$output->add_error_message('\'file_get_contents\' extension is not installed.');
+	return $output->get_results();
 }
 
 $option = isset($_POST['check']) ? escapeURLData($_POST['check']) : 'all';
-$result = array();
+$output = array();
 
 switch ($option) {
 	case 'php_modules':
-		array_push($result, check_php_modules());
+		array_push($output, check_php_modules());
 		break;
 	case 'config_file':
-		array_push($result, check_config_file());
+		array_push($output, check_config_file());
 		break;
 	case 'database_accessibility':
-		array_push($result, check_database_accessibility());
+		array_push($output, check_database_accessibility());
 		break;
 	case 'http_connectivity':
-		array_push($result, check_http_connectivity());
+		array_push($output, check_http_connectivity());
 		break;
 	case 'https_connectivity':
-		array_push($result, check_https_connectivity());
+		array_push($output, check_https_connectivity());
 		break;
 	case 'fulfillment_url_availability':
-		array_push($result, check_fulfillment_url_availability());
+		array_push($output, check_fulfillment_url_availability());
 		break;
 	case 'cross_domain_access':
-		array_push($result, check_cross_domain_access());
+		array_push($output, check_cross_domain_access());
 		break;
 	case 'all':
-		array_push($result, check_php_modules());
-		array_push($result, check_config_file());
-		array_push($result, check_database_accessibility());
-		array_push($result, check_http_connectivity());
-		array_push($result, check_https_connectivity());
-		array_push($result, check_fulfillment_url_availability());
-		array_push($result, check_cross_domain_access());
+		array_push($output, check_php_modules());
+		array_push($output, check_config_file());
+		array_push($output, check_database_accessibility());
+		array_push($output, check_http_connectivity());
+		array_push($output, check_https_connectivity());
+		array_push($output, check_fulfillment_url_availability());
+		array_push($output, check_cross_domain_access());
 		break;
 	default:
-		$error = new output('Checking post parameter:');
-		$error->add_message('Invalid post value.');
-		array_push($result, $error->get());
+		$error = new Output('Checking post parameter:');
+		$error->add_error_message('Invalid post value.');
+		array_push($output, $error->get_results());
 		break;
 }
 
-print_r(json_encode($result));
+print_r(json_encode($output));
 return;
