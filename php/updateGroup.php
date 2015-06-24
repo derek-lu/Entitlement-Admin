@@ -4,15 +4,15 @@ require_once "utils.php";
 
 // ini_set('display_errors', 1);
 
-$group = json_decode($_POST["group"]);
+$group = json_decode(escapeURLData($_POST["group"]));
 
-$guid = escapeURLData($group->guid);
-$id = escapeURLData($group->id);
-$name = escapeURLData($group->name);
-$description = escapeURLData($group->description);
+$guid = $group->guid;
+$id = $group->id;
+$name = $group->name;
+$description = $group->description;
 $folios = $group->folios;
 $users = $group->users;
-$csrfToken = escapeURLData($group->csrfToken);
+$csrfToken = $group->csrfToken;
 
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 

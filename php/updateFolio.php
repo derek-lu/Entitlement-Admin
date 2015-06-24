@@ -4,13 +4,13 @@ require_once "utils.php";
 
 //ini_set('display_errors', 1);
 
-$data = json_decode($_POST["data"]);
+$data = json_decode(escapeURLData($_POST["data"]));
 
-$productId = escapeURLData($data->productId);
-$guid = escapeURLData($data->guid);
+$productId = $data->productId;
+$guid = $data->guid;
 $groupIds = $data->groupIds;
 $userIds = $data->userIds;
-$csrfToken = escapeURLData($data->csrfToken);
+$csrfToken = $data->csrfToken;
 
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 

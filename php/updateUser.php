@@ -4,16 +4,16 @@ require_once "utils.php";
 
 //ini_set('display_errors', 1);
 
-$user = json_decode($_POST["user"]);
+$user = json_decode(escapeURLData($_POST["user"]));
 
-$guid = escapeURLData($user->guid);
-$id = escapeURLData($user->id);
-$name = escapeURLData($user->name);
-$password = escapeURLData($user->password);
-$description = escapeURLData($user->description);
+$guid = $user->guid;
+$id = $user->id;
+$name = $user->name;
+$password = $user->password;
+$description = $user->description;
 $folios = $user->folios;
 $groups = $user->groups;
-$csrfToken = escapeURLData($user->csrfToken);
+$csrfToken = $user->csrfToken;
 
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
