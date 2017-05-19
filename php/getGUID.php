@@ -17,7 +17,7 @@ else
 if (empty($password)) $info = "You must provide a password";
 else
 {
-	$url = "https://edge.adobe-dcfs.com/ddp/issueServer/signInWithCredentials?emailAddress=".urlencode($adobeId)."&password=".urlencode($password);
+	$url = "https://origin.adobe-dcfs.com/ddp/issueServer/signInWithCredentials?emailAddress=".urlencode($adobeId)."&password=".urlencode($password);
 	if ($ch = curl_init($url)) {
 		curl_setopt($ch, CURLOPT_COOKIEJAR, '/var/tmp/cookies.txt');
 		curl_setopt($ch, CURLOPT_COOKIEFILE, '/var/tmp/cookies.txt');
